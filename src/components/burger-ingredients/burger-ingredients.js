@@ -3,6 +3,7 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
+import PropTypes from 'prop-types';
 
 const burgerIngredientsData = require('../../utils/data.json');
 
@@ -32,6 +33,8 @@ class Tabs extends Component {
     }
 }
 
+Tabs.propTypes = {};
+
 class Ingredient extends Component {
     render() {
         return (
@@ -47,6 +50,10 @@ class Ingredient extends Component {
         )
     }
 }
+
+Ingredient.propTypes = {
+    item: PropTypes.object.isRequired,
+};
 
 class IngredientsSection extends Component {
     types = {
@@ -82,6 +89,10 @@ class IngredientsSection extends Component {
     }
 }
 
+IngredientsSection.propTypes = {
+    type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
+};
+
 class BurgerIngredients extends Component {
     render() {
         return (
@@ -100,5 +111,7 @@ class BurgerIngredients extends Component {
 
     }
 }
+
+BurgerIngredients.propTypes = {};
 
 export default BurgerIngredients;

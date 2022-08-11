@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import PropTypes from 'prop-types';
 
 import styles from './burger-constructor.module.css';
 
@@ -27,6 +28,8 @@ class Order extends Component {
 
     }
 }
+
+Order.propTypes = {};
 
 class BurgerElement extends Component {
     render() {
@@ -59,6 +62,11 @@ class BurgerElement extends Component {
     }
 }
 
+BurgerElement.propTypes = {
+    id: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(["top", "bottom"]),
+};
+
 class BurgerConstructor extends Component {
 
     render() {
@@ -90,5 +98,7 @@ class BurgerConstructor extends Component {
 
     }
 }
+
+BurgerElement.propTypes = {};
 
 export default BurgerConstructor;
