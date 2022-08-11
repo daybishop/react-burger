@@ -34,7 +34,7 @@ class BurgerElement extends Component {
             return el._id == this.props.id
         })
         console.log(ingredient)
-        var props = {}
+        let props = {}
         if (ingredient) {
             props = {
                 text: ingredient.name,
