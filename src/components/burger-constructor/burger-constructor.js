@@ -42,6 +42,7 @@ class BurgerElement extends Component {
                 thumbnail: ingredient.image
             }
             if (ingredient.type === "bun") {
+                props.text = `${props.text} ${this.props.type === "top" ? "(верх)" : this.props.type === "bottom" ? "(низ)" : ""}`
                 props.isLocked = true;
                 props.type = this.props.type;
             }
