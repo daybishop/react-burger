@@ -33,7 +33,6 @@ class BurgerElement extends Component {
         const ingredient = burgerIngredientsData.find(el => {
             return el._id == this.props.id
         })
-        console.log(ingredient)
         let props = {}
         if (ingredient) {
             props = {
