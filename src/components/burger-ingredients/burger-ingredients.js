@@ -71,7 +71,7 @@ class IngredientsSection extends Component {
                     {
                         ingredients.map(item => {
                             return (
-                                <Ingredient item={item} />
+                                <Ingredient key={item._id} item={item} />
                             )
                         })
                     }
