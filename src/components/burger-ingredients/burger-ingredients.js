@@ -17,7 +17,7 @@ class Tabs extends Component {
 
     render() {
         return (
-            <div style={{ display: 'flex' }}>
+            <div className={styles.tabs}>
                 <Tab value="one" active={this.state.current === 'one'} onClick={this.setCurrent(this.value)}>
                     Булки
                 </Tab>
@@ -89,7 +89,7 @@ class BurgerIngredients extends Component {
                 <p className="text text_type_main-large pt-10 pb-5">
                     Соберите бургер
                 </p>
-                <Tabs className={styles.tabs} />
+                <Tabs />
                 <div className={styles.scroll_box}>
                     <IngredientsSection type="bun" />
                     <IngredientsSection type="sauce" />
