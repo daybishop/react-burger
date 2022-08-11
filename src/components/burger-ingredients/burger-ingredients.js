@@ -4,7 +4,7 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 
-const burger_ingredients = require('../../utils/data.json');
+const burgerIngredientsData = require('../../utils/data.json');
 
 class Tabs extends Component {
     constructor(props) {
@@ -55,7 +55,7 @@ class IngredientsSection extends Component {
         bun: "Булки"
     }
     render() {
-        const ingredients = burger_ingredients.filter(item => {
+        const ingredients = burgerIngredientsData.filter(item => {
             return item['type'] === this.props.type;
         });
 

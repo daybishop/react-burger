@@ -5,7 +5,7 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import styles from './burger-constructor.module.css';
 
-const burger_ingredients = require('../../utils/data.json');
+const burgerIngredientsData = require('../../utils/data.json');
 
 
 class Order extends Component {
@@ -30,7 +30,7 @@ class Order extends Component {
 
 class BurgerElement extends Component {
     render() {
-        const ingredient = burger_ingredients.find(el => {
+        const ingredient = burgerIngredientsData.find(el => {
             return el._id == this.props.id
         })
         console.log(ingredient)
