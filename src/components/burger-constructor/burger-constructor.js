@@ -61,20 +61,26 @@ class BurgerElement extends Component {
 }
 
 class BurgerConstructor extends Component {
+
     render() {
+        const elements = [
+            "60666c42cc7b410027a1a9b5",
+            "60666c42cc7b410027a1a9b6",
+            "60666c42cc7b410027a1a9b7",
+            "60666c42cc7b410027a1a9b4",
+            "60666c42cc7b410027a1a9b8",
+            "60666c42cc7b410027a1a9bb",
+            "60666c42cc7b410027a1a9bd"
+        ]
         return (
             <section className={styles.section}>
                 <div className={styles.top_and_bottom_element}>
                     <BurgerElement id="60666c42cc7b410027a1a9b1" type="top" />
                 </div>
                 <div className={styles.elements}>
-                    <BurgerElement id="60666c42cc7b410027a1a9b5" />
-                    <BurgerElement id="60666c42cc7b410027a1a9b6" />
-                    <BurgerElement id="60666c42cc7b410027a1a9b7" />
-                    <BurgerElement id="60666c42cc7b410027a1a9b4" />
-                    <BurgerElement id="60666c42cc7b410027a1a9b8" />
-                    <BurgerElement id="60666c42cc7b410027a1a9bb" />
-                    <BurgerElement id="60666c42cc7b410027a1a9bd" />
+                    {elements.map(el =>
+                        <BurgerElement id={el} key={el} />
+                    )}
                 </div>
                 <div className={styles.top_and_bottom_element}>
                     <BurgerElement id="60666c42cc7b410027a1a9b1" type="bottom" />
