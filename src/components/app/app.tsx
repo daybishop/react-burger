@@ -30,7 +30,6 @@ function App() {
         <BurgerIngredients data={ingredientsData} />
         <BurgerConstructor data={ingredientsData} />
       </main>
-      <div id='modal-root'></div>
     </div>
   );
 }
