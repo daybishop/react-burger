@@ -5,7 +5,7 @@
     gap: 16px;
     padding-top: 100px;
     height: 700px;
-    align-items: end;
+    align-items: flex-end;
 }
 
 

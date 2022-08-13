@@ -7,9 +7,6 @@ import Modal from '../common/modals'
 
 import styles from './burger-constructor.module.css';
 
-const burgerIngredientsData = require('../../utils/data.json');
-
-
 const Order = ({ onClick }) => {
     return (
         <div className={styles.total}>
@@ -33,9 +30,7 @@ Order.propTypes = {
 
 class BurgerElement extends Component {
     render() {
-        const ingredient = burgerIngredientsData.find(el => {
-            return el._id == this.props.id
-        })
+        const ingredient = this.props.ingredient;
         let props = {}
         if (ingredient) {
             props = {
@@ -63,7 +58,20 @@ class BurgerElement extends Component {
 }
 
 BurgerElement.propTypes = {
-    id: PropTypes.string.isRequired,
+    ingredient: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
+        proteins: PropTypes.number.isRequired,
+        fat: PropTypes.number.isRequired,
+        carbohydrates: PropTypes.number.isRequired,
+        calories: PropTypes.number.isRequired,
+        price: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired,
+        image_mobile: PropTypes.string.isRequired,
+        image_large: PropTypes.string.isRequired,
+        __v: PropTypes.number.isRequired
+    }),
     type: PropTypes.oneOf(["top", "bottom"]),
 };
 
@@ -93,7 +101,7 @@ OrderDetails.propTypes = {
     id: PropTypes.string.isRequired,
 };
 
-export default function BurgerConstructor() {
+export default function BurgerConstructor({ data }) {
 
     const [showModal, setShowModal] = useState(false);
 
@@ -101,26 +109,28 @@ export default function BurgerConstructor() {
     const hideModal = () => setShowModal(false);
 
     const elements = [
-        "60666c42cc7b410027a1a9b5",
-        "60666c42cc7b410027a1a9b6",
-        "60666c42cc7b410027a1a9b7",
-        "60666c42cc7b410027a1a9b4",
-        "60666c42cc7b410027a1a9b8",
-        "60666c42cc7b410027a1a9bb",
-        "60666c42cc7b410027a1a9bd"
+        "60d3b41abdacab0026a733cd",
+        "60d3b41abdacab0026a733cf",
+        "60d3b41abdacab0026a733d0",
+        "60d3b41abdacab0026a733d4",
+        "60d3b41abdacab0026a733c8",
+        "60d3b41abdacab0026a733cb"
     ]
+
+    const getIngredientById = id => data.find(item => item._id === id)
+
     return (
         <section className={styles.section}>
             <div className={styles.top_and_bottom_element}>
-                <BurgerElement id="60666c42cc7b410027a1a9b1" type="top" />
+                <BurgerElement ingredient={getIngredientById("60d3b41abdacab0026a733c6")} type="top" />
             </div>
             <div className={styles.elements}>
                 {elements.map(el =>
-                    <BurgerElement id={el} key={el} />
+                    <BurgerElement ingredient={getIngredientById(el)} key={el} />
                 )}
             </div>
             <div className={styles.top_and_bottom_element}>
-                <BurgerElement id="60666c42cc7b410027a1a9b1" type="bottom" />
+                <BurgerElement ingredient={getIngredientById("60d3b41abdacab0026a733c6")} type="bottom" />
             </div>
             <Order onClick={onShowModal} />
             {
@@ -132,3 +142,21 @@ export default function BurgerConstructor() {
         </section>
     );
 }
+BurgerConstructor.propTypes = {
+    data: PropTypes.arrayOf(
+        PropTypes.shape({
+            _id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
+            proteins: PropTypes.number.isRequired,
+            fat: PropTypes.number.isRequired,
+            carbohydrates: PropTypes.number.isRequired,
+            calories: PropTypes.number.isRequired,
+            price: PropTypes.number.isRequired,
+            image: PropTypes.string.isRequired,
+            image_mobile: PropTypes.string.isRequired,
+            image_large: PropTypes.string.isRequired,
+            __v: PropTypes.number.isRequired
+        })
+    ).isRequired,
+};

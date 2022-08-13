@@ -6,8 +6,6 @@ import styles from './burger-ingredients.module.css';
 import PropTypes from 'prop-types';
 import Modal from '../common/modals'
 
-const burgerIngredientsData = require('../../utils/data.json');
-
 class Tabs extends Component {
     constructor(props) {
         super(props);
@@ -69,7 +67,7 @@ const IngredientDetails = ({ item }) => {
     ]
     return (
         <div className={styles.modal_content}>
-            <img className={styles.item_img} src={item.image_large} />
+            <img className={styles.item_img} src={item.image_large} alt={item.name} />
             <span className={`text text_type_main-medium ${styles.modal_title}`}>{item.name}</span>
             <div className={styles.gbu}>
                 {gbu.map((el) => <GBUElement key={el} item={item} type={el} />)}
@@ -93,7 +91,7 @@ const Ingredient = ({ item }) => {
         <>
             <li className={styles.item} onClick={onShowModal}>
                 <Counter className={styles.counter} count={1} />
-                <img className={styles.item_img} src={item.image} />
+                <img className={styles.item_img} src={item.image} alt={item.name} />
                 <span className={`text text_type_digits-default ${styles.item_price}`}>
                     {item.price}
                     <CurrencyIcon />
@@ -121,7 +119,7 @@ class IngredientsSection extends Component {
         bun: "Булки"
     }
     render() {
-        const ingredients = burgerIngredientsData.filter(item => {
+        const ingredients = this.props.data.filter(item => {
             return item['type'] === this.props.type;
         });
 
@@ -150,27 +148,41 @@ class IngredientsSection extends Component {
 
 IngredientsSection.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
+    data: PropTypes.array.isRequired,
 };
 
-class BurgerIngredients extends Component {
-    render() {
-        return (
-            <section className={styles.section}>
-                <p className="text text_type_main-large pt-10 pb-5">
-                    Соберите бургер
-                </p>
-                <Tabs />
-                <div className={styles.scroll_box}>
-                    <IngredientsSection type="bun" />
-                    <IngredientsSection type="sauce" />
-                    <IngredientsSection type="main" />
-                </div>
-            </section>
-        );
+export default function BurgerIngredients({ data }) {
+    return (
+        <section className={styles.section}>
+            <p className="text text_type_main-large pt-10 pb-5">
+                Соберите бургер
+            </p>
+            <Tabs />
+            <div className={styles.scroll_box}>
+                <IngredientsSection data={data} type="bun" />
+                <IngredientsSection data={data} type="sauce" />
+                <IngredientsSection data={data} type="main" />
+            </div>
+        </section>
+    );
 
-    }
 }
 
-BurgerIngredients.propTypes = {};
-
-export default BurgerIngredients;
+BurgerIngredients.propTypes = {
+    data: PropTypes.arrayOf(
+        PropTypes.shape({
+            _id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
+            proteins: PropTypes.number.isRequired,
+            fat: PropTypes.number.isRequired,
+            carbohydrates: PropTypes.number.isRequired,
+            calories: PropTypes.number.isRequired,
+            price: PropTypes.number.isRequired,
+            image: PropTypes.string.isRequired,
+            image_mobile: PropTypes.string.isRequired,
+            image_large: PropTypes.string.isRequired,
+            __v: PropTypes.number.isRequired
+        })
+    ).isRequired,
+};
