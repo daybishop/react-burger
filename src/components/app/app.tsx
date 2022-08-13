@@ -13,7 +13,7 @@ function App() {
         <BurgerIngredients />
         <BurgerConstructor />
       </main>
-      <div id='react-modals'></div>
+      <div id='modal-root'></div>
     </div>
   );
 }
