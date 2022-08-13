@@ -78,7 +78,7 @@ const IngredientDetails = ({ item }) => {
 }
 
 IngredientDetails.propTypes = {
-    item: PropTypes.object.isRequired,
+    item: ingredientType.isRequired,
 };
 
 const Ingredient = ({ item }) => {
