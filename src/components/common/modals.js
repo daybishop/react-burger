@@ -15,7 +15,7 @@ export default function Modal({ children, header, handleClose }) {
     const modalRoot = document.getElementById("modal-root");
 
     const closeOnEscapeKeyDown = (e) => {
-        if ((e.charCode || e.keyCode) === 27) {
+        if (e.key === "Escape") {
             handleClose();
         }
     }
