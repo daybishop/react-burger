@@ -118,11 +118,12 @@ export default function BurgerConstructor({ data }) {
     ]
 
     const getIngredientById = id => data.find(item => item._id === id)
+    const bun = getIngredientById("60d3b41abdacab0026a733c6")
 
     return (
         <section className={styles.section}>
             <div className={styles.top_and_bottom_element}>
-                <BurgerElement ingredient={getIngredientById("60d3b41abdacab0026a733c6")} type="top" />
+                <BurgerElement ingredient={bun} type="top" />
             </div>
             <div className={styles.elements}>
                 {elements.map(el =>
@@ -130,7 +131,7 @@ export default function BurgerConstructor({ data }) {
                 )}
             </div>
             <div className={styles.top_and_bottom_element}>
-                <BurgerElement ingredient={getIngredientById("60d3b41abdacab0026a733c6")} type="bottom" />
+                <BurgerElement ingredient={bun} type="bottom" />
             </div>
             <Order onClick={onShowModal} />
             {
