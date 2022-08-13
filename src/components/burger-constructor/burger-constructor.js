@@ -4,7 +4,7 @@ import { CurrencyIcon, DragIcon, CheckMarkIcon } from '@ya.praktikum/react-devel
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import Modal from '../common/modals'
-
+import { ingredientType } from '../../utils/types'
 import styles from './burger-constructor.module.css';
 
 const Order = ({ onClick }) => {
@@ -58,20 +58,7 @@ class BurgerElement extends Component {
 }
 
 BurgerElement.propTypes = {
-    ingredient: PropTypes.shape({
-        _id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
-        proteins: PropTypes.number.isRequired,
-        fat: PropTypes.number.isRequired,
-        carbohydrates: PropTypes.number.isRequired,
-        calories: PropTypes.number.isRequired,
-        price: PropTypes.number.isRequired,
-        image: PropTypes.string.isRequired,
-        image_mobile: PropTypes.string.isRequired,
-        image_large: PropTypes.string.isRequired,
-        __v: PropTypes.number.isRequired
-    }),
+    ingredient: (ingredientType),
     type: PropTypes.oneOf(["top", "bottom"]),
 };
 
@@ -144,20 +131,5 @@ export default function BurgerConstructor({ data }) {
     );
 }
 BurgerConstructor.propTypes = {
-    data: PropTypes.arrayOf(
-        PropTypes.shape({
-            _id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-            type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
-            proteins: PropTypes.number.isRequired,
-            fat: PropTypes.number.isRequired,
-            carbohydrates: PropTypes.number.isRequired,
-            calories: PropTypes.number.isRequired,
-            price: PropTypes.number.isRequired,
-            image: PropTypes.string.isRequired,
-            image_mobile: PropTypes.string.isRequired,
-            image_large: PropTypes.string.isRequired,
-            __v: PropTypes.number.isRequired
-        })
-    ).isRequired,
+    data: PropTypes.arrayOf(ingredientType).isRequired,
 };
