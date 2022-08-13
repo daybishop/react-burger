@@ -11,23 +11,25 @@ const burgerIngredientsData = require('../../utils/data.json');
 
 
 const Order = ({ onClick }) => {
-        return (
-            <div className={styles.total}>
-                <div className={styles.total_price}>
-                    <span className="text text_type_digits-medium">
-                        610
-                    </span>
-                    <CurrencyIcon />
-                </div>
+    return (
+        <div className={styles.total}>
+            <div className={styles.total_price}>
+                <span className="text text_type_digits-medium">
+                    610
+                </span>
+                <CurrencyIcon />
+            </div>
 
             <Button type="primary" size="large" onClick={onClick}>
-                    Оформить заказ
-                </Button>
-            </div>
-        )
+                Оформить заказ
+            </Button>
+        </div>
+    )
 }
 
-Order.propTypes = {};
+Order.propTypes = {
+    onClick: PropTypes.func,
+};
 
 class BurgerElement extends Component {
     render() {
@@ -98,28 +100,28 @@ export default function BurgerConstructor() {
     const onShowModal = () => setShowModal(true);
     const hideModal = () => setShowModal(false);
 
-        const elements = [
-            "60666c42cc7b410027a1a9b5",
-            "60666c42cc7b410027a1a9b6",
-            "60666c42cc7b410027a1a9b7",
-            "60666c42cc7b410027a1a9b4",
-            "60666c42cc7b410027a1a9b8",
-            "60666c42cc7b410027a1a9bb",
-            "60666c42cc7b410027a1a9bd"
-        ]
-        return (
-            <section className={styles.section}>
-                <div className={styles.top_and_bottom_element}>
-                    <BurgerElement id="60666c42cc7b410027a1a9b1" type="top" />
-                </div>
-                <div className={styles.elements}>
-                    {elements.map(el =>
-                        <BurgerElement id={el} key={el} />
-                    )}
-                </div>
-                <div className={styles.top_and_bottom_element}>
-                    <BurgerElement id="60666c42cc7b410027a1a9b1" type="bottom" />
-                </div>
+    const elements = [
+        "60666c42cc7b410027a1a9b5",
+        "60666c42cc7b410027a1a9b6",
+        "60666c42cc7b410027a1a9b7",
+        "60666c42cc7b410027a1a9b4",
+        "60666c42cc7b410027a1a9b8",
+        "60666c42cc7b410027a1a9bb",
+        "60666c42cc7b410027a1a9bd"
+    ]
+    return (
+        <section className={styles.section}>
+            <div className={styles.top_and_bottom_element}>
+                <BurgerElement id="60666c42cc7b410027a1a9b1" type="top" />
+            </div>
+            <div className={styles.elements}>
+                {elements.map(el =>
+                    <BurgerElement id={el} key={el} />
+                )}
+            </div>
+            <div className={styles.top_and_bottom_element}>
+                <BurgerElement id="60666c42cc7b410027a1a9b1" type="bottom" />
+            </div>
             <Order onClick={onShowModal} />
             {
                 showModal &&
@@ -127,6 +129,6 @@ export default function BurgerConstructor() {
                     <OrderDetails id="034536" />
                 </Modal>
             }
-            </section>
-        );
-    }
+        </section>
+    );
+}
