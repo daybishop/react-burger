@@ -1,16 +1,16 @@
-import { Component } from 'react';
+import { Component, useState } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
-import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { CurrencyIcon, DragIcon, CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
+import Modal from '../common/modals'
 
 import styles from './burger-constructor.module.css';
 
 const burgerIngredientsData = require('../../utils/data.json');
 
 
-class Order extends Component {
-    render() {
+const Order = ({ onClick }) => {
         return (
             <div className={styles.total}>
                 <div className={styles.total_price}>
@@ -20,13 +20,11 @@ class Order extends Component {
                     <CurrencyIcon />
                 </div>
 
-                <Button type="primary" size="large">
+            <Button type="primary" size="large" onClick={onClick}>
                     Оформить заказ
                 </Button>
             </div>
         )
-
-    }
 }
 
 Order.propTypes = {};
@@ -67,9 +65,39 @@ BurgerElement.propTypes = {
     type: PropTypes.oneOf(["top", "bottom"]),
 };
 
-class BurgerConstructor extends Component {
+function OrderDetails({ id }) {
+    return (
+        <div className={styles.modal_content}>
+            <span className="text text_type_digits-large">
+                {id}
+            </span>
+            <p className={`text text_type_main-medium ${styles.modal_id_text}`}>
+                идентификатор заказа
+            </p>
+            <div className={styles.modal_order_icon}>
+                <CheckMarkIcon />
+            </div>
+            <p className={`text text_type_main-default ${styles.modal_order_status}`}>
+                Ваш заказ начали готовить
+            </p>
+            <p className={`text text_type_main-default ${styles.modal_wait_info}`}>
+                Дождитесь готовности на орбитальной станции
+            </p>
+        </div>
+    )
+}
 
-    render() {
+OrderDetails.propTypes = {
+    id: PropTypes.string.isRequired,
+};
+
+export default function BurgerConstructor() {
+
+    const [showModal, setShowModal] = useState(false);
+
+    const onShowModal = () => setShowModal(true);
+    const hideModal = () => setShowModal(false);
+
         const elements = [
             "60666c42cc7b410027a1a9b5",
             "60666c42cc7b410027a1a9b6",
@@ -92,13 +120,13 @@ class BurgerConstructor extends Component {
                 <div className={styles.top_and_bottom_element}>
                     <BurgerElement id="60666c42cc7b410027a1a9b1" type="bottom" />
                 </div>
-                <Order />
+            <Order onClick={onShowModal} />
+            {
+                showModal &&
+                <Modal handleClose={hideModal}>
+                    <OrderDetails id="034536" />
+                </Modal>
+            }
             </section>
         );
-
     }
-}
-
-BurgerElement.propTypes = {};
-
-export default BurgerConstructor;
