@@ -1,9 +1,10 @@
-import { Component } from 'react';
+import { Component, useState } from 'react';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import PropTypes from 'prop-types';
+import Modal from '../common/modals'
 
 const burgerIngredientsData = require('../../utils/data.json');
 
@@ -33,22 +34,68 @@ class Tabs extends Component {
     }
 }
 
-Tabs.propTypes = {};
+const GBUElement = ({ item, type }) => {
+    const gbu = {
 
-class Ingredient extends Component {
-    render() {
-        return (
-            <li className={styles.item}>
+        "calories": (<><span>Калории,</span><span>ккал</span></>),
+        "fat": (<><span>Белки,</span><span>г</span></>),
+        "proteins": (<><span>Жиры,</span><span>г</span></>),
+        "carbohydrates": (<><span>Углеводы,</span><span>г</span></>),
+    }
+    return (
+        <div className={styles.gbu_item}>
+            <div>{gbu[type]}</div>
+            <span>{item[type]}</span>
+        </div>
+    )
+}
+
+const IngredientDetails = ({ item }) => {
+    const gbu = [
+        "calories",
+        "fat",
+        "proteins",
+        "carbohydrates",
+    ]
+    return (
+
+        <div className={styles.modal_content}>
+
+            <img className={styles.item_img} src={item.image_large} />
+            <span className={`text text_type_main-medium ${styles.modal_title}`}>{item.name}</span>
+            <div className={styles.gbu}>
+                {gbu.map((el) => <GBUElement key={el} item={item} type={el} />)}
+            </div>
+        </div>
+    )
+}
+
+const Ingredient = ({ item }) => {
+
+    const [showModal, setShowModal] = useState(false);
+
+    const onShowModal = () => setShowModal(true);
+    const hideModal = () => setShowModal(false);
+
+    return (
+        <>
+            <li className={styles.item} onClick={onShowModal}>
                 <Counter className={styles.counter} count={1} />
-                <img className={styles.item_img} src={this.props.item.image} />
+                <img className={styles.item_img} src={item.image} />
                 <span className={`text text_type_digits-default ${styles.item_price}`}>
-                    {this.props.item.price}
+                    {item.price}
                     <CurrencyIcon />
                 </span>
-                <span className={`text text_type_main-default ${styles.item_title}`}>{this.props.item.name}</span>
+                <span className={`text text_type_main-default ${styles.item_title}`}>{item.name}</span>
             </li>
-        )
-    }
+            {
+                showModal &&
+                <Modal header="Детали ингредиента" handleClose={hideModal}>
+                    <IngredientDetails item={item} />
+                </Modal>
+            }
+        </>
+    )
 }
 
 Ingredient.propTypes = {
