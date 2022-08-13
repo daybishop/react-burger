@@ -100,8 +100,7 @@ const Ingredient = ({ item }) => {
                 <span className={`text text_type_main-default ${styles.item_title}`}>{item.name}</span>
             </li>
             {
-                showModal &&
-                <Modal header="Детали ингредиента" handleClose={hideModal}>
+                <Modal show={showModal} header="Детали ингредиента" handleClose={hideModal}>
                     <IngredientDetails item={item} />
                 </Modal>
             }

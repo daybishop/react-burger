@@ -11,21 +11,27 @@ const ModalOverlay = ({ children, handleClose }) => {
     )
 }
 
-export default function Modal({ children, header, handleClose }) {
+export default function Modal({ show, children, header, handleClose }) {
     const modalRoot = document.getElementById("modal-root");
 
-    const closeOnEscapeKeyDown = (e) => {
-        if (e.key === "Escape") {
-            handleClose();
-        }
-    }
 
     useEffect(() => {
-        document.body.addEventListener('keydown', closeOnEscapeKeyDown)
-        return () => {
-            document.body.removeEventListener('keydown', closeOnEscapeKeyDown)
+        const closeOnEscapeKeyDown = (e) => {
+            if (e.key === "Escape") {
+                handleClose();
+            }
         }
-    }, [])
+        if (show) {
+            document.body.addEventListener('keydown', closeOnEscapeKeyDown)
+            return () => {
+                document.body.removeEventListener('keydown', closeOnEscapeKeyDown)
+            }
+        }
+    }, [show])
+
+    if (!show) {
+        return null
+    }
 
     return createPortal(
         (

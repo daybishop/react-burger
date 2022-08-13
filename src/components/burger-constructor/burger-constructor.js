@@ -122,8 +122,7 @@ export default function BurgerConstructor({ data }) {
             </div>
             <Order onClick={onShowModal} />
             {
-                showModal &&
-                <Modal handleClose={hideModal}>
+                <Modal show={showModal} handleClose={hideModal}>
                     <OrderDetails id="034536" />
                 </Modal>
             }
