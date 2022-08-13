@@ -45,6 +45,4 @@ class AppHeader extends Component {
     }
 }
 
-AppHeader.propTypes = {};
-
 export default AppHeader;
