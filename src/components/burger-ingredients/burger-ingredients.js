@@ -50,6 +50,16 @@ const GBUElement = ({ item, type }) => {
     )
 }
 
+GBUElement.propTypes = {
+    item: PropTypes.object.isRequired,
+    type: PropTypes.oneOf([
+        "calories",
+        "fat",
+        "proteins",
+        "carbohydrates",
+    ]).isRequired,
+};
+
 const IngredientDetails = ({ item }) => {
     const gbu = [
         "calories",
@@ -58,9 +68,7 @@ const IngredientDetails = ({ item }) => {
         "carbohydrates",
     ]
     return (
-
         <div className={styles.modal_content}>
-
             <img className={styles.item_img} src={item.image_large} />
             <span className={`text text_type_main-medium ${styles.modal_title}`}>{item.name}</span>
             <div className={styles.gbu}>
@@ -69,6 +77,10 @@ const IngredientDetails = ({ item }) => {
         </div>
     )
 }
+
+Ingredient.propTypes = {
+    item: PropTypes.object.isRequired,
+};
 
 const Ingredient = ({ item }) => {
 
