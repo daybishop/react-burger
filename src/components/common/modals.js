@@ -11,9 +11,9 @@ const ModalOverlay = ({ children, handleClose }) => {
     )
 }
 
-export default function Modal({ show, children, header, handleClose }) {
-    const modalRoot = document.getElementById("modal-root");
+const modalRoot = document.getElementById("modal-root");
 
+export default function Modal({ show, children, header, handleClose }) {
 
     useEffect(() => {
         const closeOnEscapeKeyDown = (e) => {
