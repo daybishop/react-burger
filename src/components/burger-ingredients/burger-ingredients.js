@@ -1,4 +1,4 @@
-import { Component, useState } from 'react';
+import { useState } from 'react';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -8,32 +8,24 @@ import Modal from '../common/modals'
 import { ingredientType } from '../../utils/types'
 import IngredientDetails from './ingredient-details'
 
-class Tabs extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { current: "one" };
-    }
+const Tabs = () => {
 
-    setCurrent = (value) => {
-    }
+    const [current, setCurrent] = useState("one");
 
-    render() {
-        return (
-            <div className={styles.tabs}>
-                <Tab value="one" active={this.state.current === 'one'} onClick={this.setCurrent(this.value)}>
-                    Булки
-                </Tab>
-                <Tab value="two" active={this.state.current === 'two'} onClick={this.setCurrent(this.value)}>
-                    Соусы
-                </Tab>
-                <Tab value="three" active={this.state.current === 'three'} onClick={this.setCurrent(this.value)}>
-                    Начинки
-                </Tab>
-            </div>
-        )
-    }
+    return (
+        <div className={styles.tabs}>
+            <Tab value="one" active={current === "one"} onClick={e => setCurrent(e.value)}>
+                Булки
+            </Tab>
+            <Tab value="two" active={current === "two"} onClick={e => setCurrent(e.value)}>
+                Соусы
+            </Tab>
+            <Tab value="three" active={current === "three"} onClick={e => setCurrent(e.value)}>
+                Начинки
+            </Tab>
+        </div>
+    )
 }
-
 
 const Ingredient = ({ item }) => {
 
@@ -66,38 +58,36 @@ Ingredient.propTypes = {
     item: ingredientType.isRequired,
 };
 
-class IngredientsSection extends Component {
-    types = {
+const IngredientsSection = ({ type, data }) => {
+    const types = {
         main: "Начинка",
         sauce: "Соусы",
         bun: "Булки"
     }
-    render() {
-        const ingredients = this.props.data.filter(item => {
-            return item['type'] === this.props.type;
-        });
+    const ingredients = data.filter(item => {
+        return item['type'] === type;
+    });
 
-        return (
-            <section className={styles.section}>
-                {/* Заголовок списка определённого типа */}
-                < p className={`text text_type_main-medium pt-10 pb-6 ${styles.section_title}`}>
-                    {this.types[this.props.type]}
-                </p >
+    return (
+        <section className={styles.section}>
+            {/* Заголовок списка определённого типа */}
+            < p className={`text text_type_main-medium pt-10 pb-6 ${styles.section_title}`}>
+                {types[type]}
+            </p >
 
-                {/* Список ингредиентов */}
-                <ul className={styles.items}>
-                    {
-                        ingredients.map(item => {
-                            return (
-                                <Ingredient key={item._id} item={item} />
-                            )
-                        })
-                    }
-                </ul>
-            </section >
+            {/* Список ингредиентов */}
+            <ul className={styles.items}>
+                {
+                    ingredients.map(item => {
+                        return (
+                            <Ingredient key={item._id} item={item} />
+                        )
+                    })
+                }
+            </ul>
+        </section >
 
-        )
-    }
+    )
 }
 
 IngredientsSection.propTypes = {

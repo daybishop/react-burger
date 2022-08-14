@@ -1,4 +1,4 @@
-import { Component, useState } from 'react';
+import { useState } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -29,33 +29,30 @@ Order.propTypes = {
     onClick: PropTypes.func,
 };
 
-class BurgerElement extends Component {
-    render() {
-        const ingredient = this.props.ingredient;
-        let props = {}
-        if (ingredient) {
-            props = {
-                text: ingredient.name,
-                price: ingredient.price,
-                thumbnail: ingredient.image
-            }
-            if (ingredient.type === "bun") {
-                props.text = `${props.text} ${this.props.type === "top" ? "(верх)" : this.props.type === "bottom" ? "(низ)" : ""}`
-                props.isLocked = true;
-                props.type = this.props.type;
-            }
+const BurgerElement = ({ ingredient, type }) => {
+    let props = {}
+    if (ingredient) {
+        props = {
+            text: ingredient.name,
+            price: ingredient.price,
+            thumbnail: ingredient.image
         }
-        return (
-            ingredient ?
-                <div className={styles.element}>
-                    {props.isLocked ? "" : <DragIcon />}
-                    <ConstructorElement
-                        {...props}
-                    />
-                </div>
-                : ''
-        )
+        if (ingredient.type === "bun") {
+            props.text = `${props.text} ${type === "top" ? "(верх)" : type === "bottom" ? "(низ)" : ""}`
+            props.isLocked = true;
+            props.type = type;
+        }
     }
+    return (
+        ingredient ?
+            <div className={styles.element}>
+                {props.isLocked ? "" : <DragIcon />}
+                <ConstructorElement
+                    {...props}
+                />
+            </div>
+            : ''
+    )
 }
 
 BurgerElement.propTypes = {
