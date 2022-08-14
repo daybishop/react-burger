@@ -4,7 +4,7 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import PropTypes from 'prop-types';
-import Modal from '../common/modals'
+import Modal from '../common/modal'
 import { ingredientType } from '../../utils/types'
 import IngredientDetails from './ingredient-details'
 

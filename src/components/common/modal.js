@@ -1,15 +1,10 @@
 import { createPortal } from "react-dom";
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import styles from './modals.module.css';
+import styles from './modal.module.css';
 import { useEffect } from "react";
+import ModalOverlay from "./modal-overlay";
+import PropTypes from 'prop-types';
 
-const ModalOverlay = ({ children, handleClose }) => {
-    return (
-        <div className={styles.modal_overlay} onClick={handleClose}>
-            {children}
-        </div>
-    )
-}
 
 const modalRoot = document.getElementById("modal-root");
 
@@ -36,7 +31,7 @@ export default function Modal({ show, children, header, handleClose }) {
     return createPortal(
         (
             <ModalOverlay handleClose={handleClose}>
-                <section className={styles.modal_main} onClick={e => e.stopPropagation()}>
+                <section className={styles.main} onClick={e => e.stopPropagation()}>
                     <div className={`text text_type_main-large pt-10 pb-6 ${styles.title}`}>
                         <span>{header}</span>
                         <CloseIcon onClick={handleClose} />
@@ -47,4 +42,11 @@ export default function Modal({ show, children, header, handleClose }) {
         ),
         modalRoot
     );
-} 
+}
+
+Modal.propTypes = {
+    show: PropTypes.bool.isRequired,
+    children: PropTypes.node.isRequired,
+    header: PropTypes.string,
+    handleClose: PropTypes.func.isRequired,
+};

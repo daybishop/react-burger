@@ -3,7 +3,7 @@ import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-comp
 import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import Modal from '../common/modals'
+import Modal from '../common/modal'
 import { ingredientType } from '../../utils/types'
 import styles from './burger-constructor.module.css';
 import OrderDetails from './order-details'
