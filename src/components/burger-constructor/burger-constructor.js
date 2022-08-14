@@ -1,11 +1,12 @@
 import { Component, useState } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
-import { CurrencyIcon, DragIcon, CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import Modal from '../common/modals'
 import { ingredientType } from '../../utils/types'
 import styles from './burger-constructor.module.css';
+import OrderDetails from './order-details'
 
 const Order = ({ onClick }) => {
     return (
@@ -60,32 +61,6 @@ class BurgerElement extends Component {
 BurgerElement.propTypes = {
     ingredient: (ingredientType),
     type: PropTypes.oneOf(["top", "bottom"]),
-};
-
-function OrderDetails({ id }) {
-    return (
-        <div className={styles.modal_content}>
-            <span className="text text_type_digits-large">
-                {id}
-            </span>
-            <p className={`text text_type_main-medium ${styles.modal_id_text}`}>
-                идентификатор заказа
-            </p>
-            <div className={styles.modal_order_icon}>
-                <CheckMarkIcon />
-            </div>
-            <p className={`text text_type_main-default ${styles.modal_order_status}`}>
-                Ваш заказ начали готовить
-            </p>
-            <p className={`text text_type_main-default ${styles.modal_wait_info}`}>
-                Дождитесь готовности на орбитальной станции
-            </p>
-        </div>
-    )
-}
-
-OrderDetails.propTypes = {
-    id: PropTypes.string.isRequired,
 };
 
 export default function BurgerConstructor({ data }) {

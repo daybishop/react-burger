@@ -1,0 +1,29 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.order_id {
+    margin-top: 16px;
+}
+
+.id_text {
+    margin-top: 32px;
+    color: #F2F2F3;
+}
+
+.order_icon {
+    margin-top: 60px;
+}
+
+.order_status {
+    margin-top: 60px;
+    color: #F2F2F3;
+}
+
+.wait_info {
+    margin-top: 8px;
+    margin-bottom: 120px;
+    color: #8585AD;
+}

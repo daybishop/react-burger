@@ -6,6 +6,7 @@ import styles from './burger-ingredients.module.css';
 import PropTypes from 'prop-types';
 import Modal from '../common/modals'
 import { ingredientType } from '../../utils/types'
+import IngredientDetails from './ingredient-details'
 
 class Tabs extends Component {
     constructor(props) {
@@ -33,53 +34,6 @@ class Tabs extends Component {
     }
 }
 
-const GBUElement = ({ item, type }) => {
-    const gbu = {
-
-        "calories": (<><span>Калории,</span><span>ккал</span></>),
-        "fat": (<><span>Белки,</span><span>г</span></>),
-        "proteins": (<><span>Жиры,</span><span>г</span></>),
-        "carbohydrates": (<><span>Углеводы,</span><span>г</span></>),
-    }
-    return (
-        <div className={styles.gbu_item}>
-            <div>{gbu[type]}</div>
-            <span>{item[type]}</span>
-        </div>
-    )
-}
-
-GBUElement.propTypes = {
-    item: PropTypes.object.isRequired,
-    type: PropTypes.oneOf([
-        "calories",
-        "fat",
-        "proteins",
-        "carbohydrates",
-    ]).isRequired,
-};
-
-const IngredientDetails = ({ item }) => {
-    const gbu = [
-        "calories",
-        "fat",
-        "proteins",
-        "carbohydrates",
-    ]
-    return (
-        <div className={styles.modal_content}>
-            <img className={styles.item_img} src={item.image_large} alt={item.name} />
-            <span className={`text text_type_main-medium ${styles.modal_title}`}>{item.name}</span>
-            <div className={styles.gbu}>
-                {gbu.map((el) => <GBUElement key={el} item={item} type={el} />)}
-            </div>
-        </div>
-    )
-}
-
-IngredientDetails.propTypes = {
-    item: ingredientType.isRequired,
-};
 
 const Ingredient = ({ item }) => {
 
