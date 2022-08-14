@@ -27,16 +27,10 @@ const Tabs = () => {
     )
 }
 
-const Ingredient = ({ item }) => {
-
-    const [showModal, setShowModal] = useState(false);
-
-    const onShowModal = () => setShowModal(true);
-    const hideModal = () => setShowModal(false);
-
+const Ingredient = ({ item, handleClick }) => {
     return (
         <>
-            <li className={styles.item} onClick={onShowModal}>
+            <li className={styles.item} onClick={e => handleClick(item)}>
                 <Counter className={styles.counter} count={1} />
                 <img className={styles.item_img} src={item.image} alt={item.name} />
                 <span className={`text text_type_digits-default ${styles.item_price}`}>
@@ -45,20 +39,16 @@ const Ingredient = ({ item }) => {
                 </span>
                 <span className={`text text_type_main-default ${styles.item_title}`}>{item.name}</span>
             </li>
-            {
-                <Modal show={showModal} header="Детали ингредиента" handleClose={hideModal}>
-                    <IngredientDetails item={item} />
-                </Modal>
-            }
         </>
     )
 }
 
 Ingredient.propTypes = {
     item: ingredientType.isRequired,
+    handleClick: PropTypes.func.isRequired,
 };
 
-const IngredientsSection = ({ type, data }) => {
+const IngredientsSection = ({ type, data, handleClick }) => {
     const types = {
         main: "Начинка",
         sauce: "Соусы",
@@ -80,22 +70,35 @@ const IngredientsSection = ({ type, data }) => {
                 {
                     ingredients.map(item => {
                         return (
-                            <Ingredient key={item._id} item={item} />
+                            <Ingredient key={item._id} item={item} handleClick={handleClick} />
                         )
                     })
                 }
             </ul>
         </section >
-
     )
 }
 
 IngredientsSection.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
     data: PropTypes.array.isRequired,
+    handleClick: PropTypes.func.isRequired,
 };
 
 export default function BurgerIngredients({ data }) {
+
+    const [showModal, setShowModal] = useState(false);
+    const [item, setItem] = useState(null);
+
+    const onShowModal = (item) => {
+        setShowModal(true);
+        setItem(item);
+    }
+    const hideModal = () => {
+        setShowModal(false);
+        setItem(null);
+    }
+
     return (
         <section className={styles.section}>
             <p className="text text_type_main-large pt-10 pb-5">
@@ -103,10 +106,13 @@ export default function BurgerIngredients({ data }) {
             </p>
             <Tabs />
             <div className={styles.scroll_box}>
-                <IngredientsSection data={data} type="bun" />
-                <IngredientsSection data={data} type="sauce" />
-                <IngredientsSection data={data} type="main" />
+                <IngredientsSection data={data} type="bun" handleClick={onShowModal} />
+                <IngredientsSection data={data} type="sauce" handleClick={onShowModal} />
+                <IngredientsSection data={data} type="main" handleClick={onShowModal} />
             </div>
+            <Modal show={showModal} header="Детали ингредиента" handleClose={hideModal}>
+                <IngredientDetails item={item} />
+            </Modal>
         </section>
     );
 

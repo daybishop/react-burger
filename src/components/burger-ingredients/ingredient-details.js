@@ -36,6 +36,9 @@ export default function IngredientDetails({ item }) {
         "proteins",
         "carbohydrates",
     ]
+    if (item === null) {
+        return null;
+    }
     return (
         <div className={styles.content}>
             <img className={styles.image} src={item.image_large} alt={item.name} />
@@ -48,5 +51,5 @@ export default function IngredientDetails({ item }) {
 }
 
 IngredientDetails.propTypes = {
-    item: ingredientType.isRequired,
+    item: ingredientType,
 };
