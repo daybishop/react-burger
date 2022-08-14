@@ -26,7 +26,7 @@ const Order = ({ onClick }) => {
 }
 
 Order.propTypes = {
-    onClick: PropTypes.func,
+    onClick: PropTypes.func.isRequired,
 };
 
 const BurgerElement = ({ ingredient, type }) => {

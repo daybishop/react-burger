@@ -81,7 +81,7 @@ const IngredientsSection = ({ type, data, handleClick }) => {
 
 IngredientsSection.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
-    data: PropTypes.array.isRequired,
+    data: PropTypes.arrayOf(ingredientType).isRequired,
     handleClick: PropTypes.func.isRequired,
 };
 
