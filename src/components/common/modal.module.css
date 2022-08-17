@@ -1,0 +1,21 @@
+.main {
+    display: block;
+    position: fixed;
+    width: 720px;
+    /* height: auto; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1C1C21;
+    border: 1px solid rgba(76, 76, 255, 0.2);
+    border-radius: 40px;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #F2F2F3;
+    padding-left: 40px;
+    padding-right: 40px;
+}
