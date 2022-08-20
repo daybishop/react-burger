@@ -3,6 +3,7 @@ import AppHeader from '../../components/app-header/app-header';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
 import { useEffect, useState } from 'react';
+import { IngredientsDataContext } from '../services/ingredients-data-context';
 import { INGREDIENTS } from '../common/constants';
 
 function App() {
@@ -31,7 +32,9 @@ function App() {
       <AppHeader />
       <main>
         <BurgerIngredients data={ingredientsData} />
-        <BurgerConstructor data={ingredientsData} />
+        <IngredientsDataContext.Provider value={ingredientsData}>
+          <BurgerConstructor />
+        </IngredientsDataContext.Provider>
       </main>
     </div>
   );
