@@ -4,7 +4,7 @@ import BurgerIngredients from '../../components/burger-ingredients/burger-ingred
 import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
 import { useEffect, useState } from 'react';
 import { IngredientsDataContext } from '../../services/ingredients-data-context';
-import { INGREDIENTS } from '../common/constants';
+import { INGREDIENTS } from '../../utils/constants';
 
 function App() {
   const [ingredientsData, setIngredientsData] = useState([]);
