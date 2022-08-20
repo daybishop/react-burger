@@ -9,24 +9,33 @@ import { ingredientType } from '../../utils/types'
 import IngredientDetails from './ingredient-details'
 import { IngredientsDataContext } from '../../services/ingredients-data-context';
 
-const Tabs = () => {
+const Tabs = ({ handleTabClick }) => {
 
-    const [current, setCurrent] = useState("one");
+    const [current, setCurrent] = useState("bun");
+
+    const onClick = (e) => {
+        setCurrent(e)
+        handleTabClick(e)
+    }
 
     return (
         <div className={styles.tabs}>
-            <Tab value="one" active={current === "one"} onClick={e => setCurrent(e.value)}>
+            <Tab value="bun" active={current === "bun"} onClick={onClick}>
                 Булки
             </Tab>
-            <Tab value="two" active={current === "two"} onClick={e => setCurrent(e.value)}>
+            <Tab value="sauce" active={current === "sauce"} onClick={onClick}>
                 Соусы
             </Tab>
-            <Tab value="three" active={current === "three"} onClick={e => setCurrent(e.value)}>
+            <Tab value="main" active={current === "main"} onClick={onClick}>
                 Начинки
             </Tab>
         </div>
     )
 }
+
+Tabs.propTypes = {
+    handleTabClick: PropTypes.func.isRequired,
+};
 
 const Ingredient = ({ item, handleClick }) => {
     return (
@@ -65,7 +74,7 @@ const IngredientsSection = ({ type, handleClick }) => {
     return (
         <section className={styles.section}>
             {/* Заголовок списка определённого типа */}
-            < p className={`text text_type_main-medium pt-10 pb-6 ${styles.section_title}`}>
+            < p id={`ingredient_section_${type}`} className={`text text_type_main-medium pt-10 pb-6 ${styles.section_title}`}>
                 {types[type]}
             </p >
 
@@ -102,12 +111,16 @@ export default function BurgerIngredients() {
         setItem(null);
     }
 
+    const onTabClick = (e) => {
+        document.getElementById(`ingredient_section_${e}`).scrollIntoView({ block: "start", behavior: "smooth" })
+    }
+
     return (
         <section className={styles.section}>
             <p className="text text_type_main-large pt-10 pb-5">
                 Соберите бургер
             </p>
-            <Tabs />
+            <Tabs handleTabClick={onTabClick} />
             <div className={styles.scroll_box}>
                 <IngredientsSection type="bun" handleClick={onShowModal} />
                 <IngredientsSection type="sauce" handleClick={onShowModal} />
