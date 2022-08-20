@@ -7,9 +7,9 @@ import Modal from '../common/modal'
 import { ingredientType } from '../../utils/types'
 import styles from './burger-constructor.module.css';
 import OrderDetails from './order-details'
-import { IngredientsDataContext } from '../services/ingredients-data-context';
+import { IngredientsDataContext } from '../../services/ingredients-data-context';
 import { ORDERS } from '../common/constants';
-import { BurgerIngredientsContext } from '../services/burger-constructor-context';
+import { BurgerIngredientsContext } from '../../services/burger-constructor-context';
 
 const TotalPrice = () => {
 
