@@ -5,26 +5,18 @@ import BurgerConstructor from '../../components/burger-constructor/burger-constr
 import { useEffect, useState } from 'react';
 import { IngredientsDataContext } from '../../services/ingredients-data-context';
 import { INGREDIENTS } from '../../utils/constants';
+import { checkResponse } from '../common/api';
+
 
 function App() {
   const [ingredientsData, setIngredientsData] = useState([]);
 
   useEffect(() => {
     fetch(INGREDIENTS)
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Ошибка ${res.status}`);
-      })
+      .then(res => checkResponse(res))
       .then(data => {
-        if (data.success) {
-          setIngredientsData(data.data)
-        } else throw new Error("Error data loading");
+        setIngredientsData(data.data)
       })
-      .catch(e => {
-        console.log(e)
-      });
   }, [])
 
   return (

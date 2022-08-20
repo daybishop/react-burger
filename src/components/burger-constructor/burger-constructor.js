@@ -10,6 +10,7 @@ import OrderDetails from './order-details'
 import { IngredientsDataContext } from '../../services/ingredients-data-context';
 import { ORDERS } from '../../utils/constants';
 import { BurgerIngredientsContext } from '../../services/burger-constructor-context';
+import { checkResponse } from '../common/api';
 
 const TotalPrice = () => {
 
@@ -54,20 +55,12 @@ const OrderButton = ({ handleClick }) => {
                     ingredients: burgerIngredients
                 })
             })
-                .then(res => {
-                    if (res.ok) {
-                        return res.json();
-                    }
-                    return Promise.reject(`Ошибка ${res.status}`);
-                })
+                .then(res => checkResponse(res))
                 .then(data => {
                     if (data.success) {
                         handleClick(data.order.number)
                     } else throw new Error("Error data loading");
                 })
-                .catch(e => {
-                    console.log(e)
-                });
         }
     }
 
