@@ -22,7 +22,7 @@ export default function Modal({ show, children, header, handleClose }) {
                 document.body.removeEventListener('keydown', closeOnEscapeKeyDown)
             }
         }
-    }, [show])
+    }, [show]) // eslint-disable-line react-hooks/exhaustive-deps
 
     if (!show) {
         return null
