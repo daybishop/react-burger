@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import Modal from '../common/modal'
 import { ingredientType } from '../../utils/types'
 import IngredientDetails from './ingredient-details'
+import { IngredientsDataContext } from '../../services/ingredients-data-context';
 
 const Tabs = () => {
 
@@ -48,13 +49,16 @@ Ingredient.propTypes = {
     handleClick: PropTypes.func.isRequired,
 };
 
-const IngredientsSection = ({ type, data, handleClick }) => {
+const IngredientsSection = ({ type, handleClick }) => {
+
+    const ingredientsData = useContext(IngredientsDataContext);
+
     const types = {
         main: "Начинка",
         sauce: "Соусы",
         bun: "Булки"
     }
-    const ingredients = data.filter(item => {
+    const ingredients = ingredientsData.filter(item => {
         return item['type'] === type;
     });
 
@@ -81,11 +85,10 @@ const IngredientsSection = ({ type, data, handleClick }) => {
 
 IngredientsSection.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
-    data: PropTypes.arrayOf(ingredientType).isRequired,
     handleClick: PropTypes.func.isRequired,
 };
 
-export default function BurgerIngredients({ data }) {
+export default function BurgerIngredients() {
 
     const [showModal, setShowModal] = useState(false);
     const [item, setItem] = useState(null);
@@ -106,9 +109,9 @@ export default function BurgerIngredients({ data }) {
             </p>
             <Tabs />
             <div className={styles.scroll_box}>
-                <IngredientsSection data={data} type="bun" handleClick={onShowModal} />
-                <IngredientsSection data={data} type="sauce" handleClick={onShowModal} />
-                <IngredientsSection data={data} type="main" handleClick={onShowModal} />
+                <IngredientsSection type="bun" handleClick={onShowModal} />
+                <IngredientsSection type="sauce" handleClick={onShowModal} />
+                <IngredientsSection type="main" handleClick={onShowModal} />
             </div>
             <Modal show={showModal} header="Детали ингредиента" handleClose={hideModal}>
                 <IngredientDetails item={item} />
@@ -117,7 +120,3 @@ export default function BurgerIngredients({ data }) {
     );
 
 }
-
-BurgerIngredients.propTypes = {
-    data: PropTypes.arrayOf(ingredientType).isRequired,
-};

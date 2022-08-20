@@ -31,8 +31,8 @@ function App() {
     <div className="App">
       <AppHeader />
       <main>
-        <BurgerIngredients data={ingredientsData} />
         <IngredientsDataContext.Provider value={ingredientsData}>
+          <BurgerIngredients />
           <BurgerConstructor />
         </IngredientsDataContext.Provider>
       </main>
