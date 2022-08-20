@@ -3,9 +3,7 @@ import AppHeader from '../../components/app-header/app-header';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
 import { useEffect, useState } from 'react';
-
-const API = "https://norma.nomoreparties.space/api"
-const INGREDIENTS = `${API}/ingredients`
+import { INGREDIENTS } from '../common/constants';
 
 function App() {
   const [ingredientsData, setIngredientsData] = useState([]);
