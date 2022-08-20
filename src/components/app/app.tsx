@@ -8,7 +8,7 @@ const API = "https://norma.nomoreparties.space/api"
 const INGREDIENTS = `${API}/ingredients`
 
 function App() {
-  const [ingredientsData, setIingredientsData] = useState([]);
+  const [ingredientsData, setIngredientsData] = useState([]);
 
   useEffect(() => {
     fetch(INGREDIENTS)
@@ -20,7 +20,7 @@ function App() {
       })
       .then(data => {
         if (data.success) {
-          setIingredientsData(data.data)
+          setIngredientsData(data.data)
         } else throw new Error("Error data loading");
       })
       .catch(e => {
