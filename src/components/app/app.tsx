@@ -2,31 +2,37 @@ import './app.module.css';
 import AppHeader from '../../components/app-header/app-header';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
-import { useEffect, useState } from 'react';
-import { IngredientsDataContext } from '../../services/ingredients-data-context';
+import { useEffect } from 'react';
 import { INGREDIENTS } from '../../utils/constants';
 import { checkResponse } from '../common/api';
+import { startLoading, loadingSuccess, hasError } from '../../services/slices/ingredients';
+import { useDispatch } from 'react-redux';
 
 
 function App() {
-  const [ingredientsData, setIngredientsData] = useState([]);
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
+    dispatch(startLoading())
     fetch(INGREDIENTS)
       .then(res => checkResponse(res))
       .then(data => {
-        setIngredientsData(data.data)
+        dispatch(loadingSuccess(data.data))
       })
-  }, [])
+      .catch(e => {
+        console.log(e)
+        dispatch(hasError(e))
+      })
+  }, [dispatch])
+
 
   return (
     <div className="App">
       <AppHeader />
       <main>
-        <IngredientsDataContext.Provider value={ingredientsData}>
-          <BurgerIngredients />
-          <BurgerConstructor />
-        </IngredientsDataContext.Provider>
+        <BurgerIngredients />
+        <BurgerConstructor />
       </main>
     </div>
   );

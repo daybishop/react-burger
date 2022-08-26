@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -7,15 +7,17 @@ import Modal from '../common/modal'
 import { ingredientType } from '../../utils/types'
 import styles from './burger-constructor.module.css';
 import OrderDetails from './order-details'
-import { IngredientsDataContext } from '../../services/ingredients-data-context';
 import { ORDERS } from '../../utils/constants';
-import { BurgerIngredientsContext } from '../../services/burger-constructor-context';
 import { checkResponse } from '../common/api';
+import { useDispatch, useSelector } from 'react-redux';
+import * as ingredientsSelectors from '../../services/selectors/ingredients';
+import { addItem, deleteItem, setOrderNumber } from '../../services/slices/constructor';
+import * as constructorSelectors from '../../services/selectors/constructor'
 
 const TotalPrice = () => {
 
-    const ingredientsData = useContext(IngredientsDataContext);
-    const burgerIngredients = useContext(BurgerIngredientsContext);
+    const ingredientsData = useSelector(ingredientsSelectors.items)
+    const burgerIngredients = useSelector(constructorSelectors.items)
     const [totalPrice, setTotalPrice] = useState(0);
 
     useEffect(() => {
@@ -41,7 +43,7 @@ const TotalPrice = () => {
 
 const OrderButton = ({ handleClick }) => {
 
-    const burgerIngredients = useContext(BurgerIngredientsContext);
+    const burgerIngredients = useSelector(constructorSelectors.items)
 
     const onClick = () => {
         if (burgerIngredients.length) {
@@ -118,9 +120,16 @@ BurgerElement.propTypes = {
 
 export default function BurgerConstructor() {
 
-    const ingredientsData = useContext(IngredientsDataContext);
-    const [burgerIngredients, setBurgerIngredients] = useState(
-        [
+    const ingredientsData = useSelector(ingredientsSelectors.items)
+    const burgerIngredients = useSelector(constructorSelectors.items)
+    const orderNumber = useSelector(constructorSelectors.orderNumber)
+
+    console.log('burgerIngredients', burgerIngredients)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        const initialData = [
             "60d3b41abdacab0026a733c6",
             "60d3b41abdacab0026a733cd",
             "60d3b41abdacab0026a733cf",
@@ -130,17 +139,18 @@ export default function BurgerConstructor() {
             "60d3b41abdacab0026a733cb",
             "60d3b41abdacab0026a733c6"
         ]
-    );
+        initialData.map(el => dispatch(addItem(el)))
+    }, [dispatch])
 
-    const [orderNumber, setOrderNumber] = useState('');
     const [showModal, setShowModal] = useState(false);
 
     const handleOrder = (number) => {
-        setOrderNumber(number)
+        console.log(number)
+        dispatch(setOrderNumber(number))
         setShowModal(true)
     }
 
-    const handleDelete = id => setBurgerIngredients(burgerIngredients.filter(el => el !== id))
+    const handleDelete = id => dispatch(deleteItem(id))
 
     const hideModal = () => setShowModal(false)
 
@@ -176,12 +186,10 @@ export default function BurgerConstructor() {
                 />
             </div>
 
-            <BurgerIngredientsContext.Provider value={burgerIngredients}>
-                <div className={styles.total}>
-                    <TotalPrice />
-                    <OrderButton handleClick={handleOrder} />
-                </div>
-            </BurgerIngredientsContext.Provider>
+            <div className={styles.total}>
+                <TotalPrice />
+                <OrderButton handleClick={handleOrder} />
+            </div>
 
             <Modal show={showModal} handleClose={hideModal}>
                 <OrderDetails id={String(orderNumber)} />

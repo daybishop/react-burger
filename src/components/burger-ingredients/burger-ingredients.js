@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -7,7 +7,9 @@ import PropTypes from 'prop-types';
 import Modal from '../common/modal'
 import { ingredientType } from '../../utils/types'
 import IngredientDetails from './ingredient-details'
-import { IngredientsDataContext } from '../../services/ingredients-data-context';
+import { useDispatch, useSelector } from 'react-redux';
+import * as ingredientsSelectors from '../../services/selectors/ingredients';
+import { clearSelectedItem, selectItem } from '../../services/slices/ingredients';
 
 const Tabs = ({ handleTabClick }) => {
 
@@ -60,7 +62,10 @@ Ingredient.propTypes = {
 
 const IngredientsSection = ({ type, handleClick }) => {
 
-    const ingredientsData = useContext(IngredientsDataContext);
+    const ingredientsData = useSelector(ingredientsSelectors.items)
+
+    console.log('ingredientsSelectors.list', ingredientsSelectors.items)
+    console.log('IngredientsSection', ingredientsData)
 
     const types = {
         main: "Начинка",
@@ -100,15 +105,17 @@ IngredientsSection.propTypes = {
 export default function BurgerIngredients() {
 
     const [showModal, setShowModal] = useState(false);
-    const [item, setItem] = useState(null);
+    const selectedItem = useSelector(ingredientsSelectors.selectedItem)
+
+    const dispatch = useDispatch()
 
     const onShowModal = (item) => {
         setShowModal(true);
-        setItem(item);
+        dispatch(selectItem(item))
     }
     const hideModal = () => {
         setShowModal(false);
-        setItem(null);
+        dispatch(clearSelectedItem())
     }
 
     const onTabClick = (e) => {
@@ -127,7 +134,7 @@ export default function BurgerIngredients() {
                 <IngredientsSection type="main" handleClick={onShowModal} />
             </div>
             <Modal show={showModal} header="Детали ингредиента" handleClose={hideModal}>
-                <IngredientDetails item={item} />
+                <IngredientDetails item={selectedItem} />
             </Modal>
         </section>
     );
