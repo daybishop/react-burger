@@ -6,9 +6,6 @@ export const checkResponse = res => {
                     return Promise.resolve(data)
                 } else throw new Error("Error data loading");
             })
-            .catch(e => {
-                console.log(e)
-            })
     }
     return Promise.reject(`Ошибка ${res.status}`)
 }

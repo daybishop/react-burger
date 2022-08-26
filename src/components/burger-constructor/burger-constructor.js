@@ -61,6 +61,9 @@ const OrderButton = ({ handleClick }) => {
                         handleClick(data.order.number)
                     } else throw new Error("Error data loading");
                 })
+                .catch(e => {
+                    console.log(e)
+                })
         }
     }
 
