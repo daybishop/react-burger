@@ -53,6 +53,7 @@
     scrollbar-color: #8585AD #1C1C21;
     scrollbar-width: thin;
     overflow-x: hidden;
+    width: 100%;
 }
 
 .elements::-webkit-scrollbar {
