@@ -32,8 +32,13 @@ const TotalPrice = () => {
 const OrderButton = ({ handleClick }) => {
 
     const burgerIngredients = useSelector(constructorSelectors.items)
+    const bun = useSelector(constructorSelectors.bun)
 
     const onClick = () => {
+        const order_ids = bun
+            ? [bun._id, ...burgerIngredients.map(item => item._id), bun._id]
+            : []
+        console.log(order_ids)
         if (burgerIngredients.length) {
             fetch(ORDERS, {
                 method: "post",
@@ -42,7 +47,7 @@ const OrderButton = ({ handleClick }) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    ingredients: burgerIngredients
+                    ingredients: order_ids
                 })
             })
                 .then(res => checkResponse(res))
