@@ -12,6 +12,7 @@ import * as ingredientsSelectors from '../../services/selectors/ingredients';
 import { clearSelectedItem, selectItem } from '../../services/slices/ingredients';
 import { useDrag } from 'react-dnd';
 import { addItem, addBun } from '../../services/slices/constructor';
+import * as constructorSelectors from '../../services/selectors/constructor';
 
 const Tabs = ({ handleTabClick }) => {
 
@@ -44,13 +45,24 @@ Tabs.propTypes = {
 const Ingredient = ({ item, handleClick }) => {
 
     const dispatch = useDispatch()
+    const burgerIngredients = useSelector(constructorSelectors.items)
+    const bun = useSelector(constructorSelectors.bun)
+    const count =
+        item.type === 'bun'
+            ? item._id === bun?._id
+                ? 2
+                : 0
+            : burgerIngredients.reduce((prev, burgerItem) => {
+                console.log(item, burgerItem)
+                return prev + (item._id === burgerItem._id ? 1 : 0)
+            }, 0)
 
     const [{ opacity }, dragRef] = useDrag(
         () => ({
             type: 'ingredient',
             item: item,
             collect: (monitor) => ({
-                opacity: monitor.isDragging() ? 1 : 1
+                opacity: monitor.isDragging() ? 0.5 : 1
             }),
             end: (item, monitor) => {
                 const dropResult = monitor.getDropResult()
@@ -64,7 +76,7 @@ const Ingredient = ({ item, handleClick }) => {
     return (
         <>
             <li className={styles.item} onClick={e => handleClick(item)} ref={dragRef} style={{ opacity }}>
-                <Counter className={styles.counter} count={1} />
+                {count > 0 && <Counter className={styles.counter} count={count} />}
                 <img className={styles.item_img} src={item.image} alt={item.name} />
                 <span className={`text text_type_digits-default ${styles.item_price}`}>
                     {item.price}

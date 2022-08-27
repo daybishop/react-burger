@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -10,10 +10,9 @@ import OrderDetails from './order-details'
 import { ORDERS } from '../../utils/constants';
 import { checkResponse } from '../common/api';
 import { useDispatch, useSelector } from 'react-redux';
-import * as ingredientsSelectors from '../../services/selectors/ingredients';
-import { addBun, addItem, deleteBun, deleteItem, setOrderNumber } from '../../services/slices/constructor';
+import { backup, deleteBun, deleteItem, moveItem, restore, setOrderNumber } from '../../services/slices/constructor';
 import * as constructorSelectors from '../../services/selectors/constructor'
-import { useDrop } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 
 const TotalPrice = () => {
 
@@ -38,7 +37,6 @@ const OrderButton = ({ handleClick }) => {
         const order_ids = bun
             ? [bun._id, ...burgerIngredients.map(item => item._id), bun._id]
             : []
-        console.log(order_ids)
         if (burgerIngredients.length) {
             fetch(ORDERS, {
                 method: "post",
@@ -105,13 +103,71 @@ BurgerBun.propTypes = {
 const BurgerElement = ({ ingredient, index }) => {
 
     const dispatch = useDispatch()
-    const { name, price, image } = ingredient
+    const { name, price, image, uuid } = ingredient
+    const ref = useRef(null)
 
-    const onClose = () => dispatch(deleteItem(index))
+    const [{ handlerId }, dropRef] = useDrop(() => ({
+        accept: 'burger_item',
+        collect(monitor) {
+            return {
+                handlerId: monitor.getHandlerId(),
+            }
+        },
+        hover: (item, monitor) => {
+            if (!ref.current) {
+                return
+            }
+
+            const dragIndex = item.index;
+            const hoverIndex = index;
+
+            if (dragIndex === hoverIndex) {
+                return
+            }
+
+            const hoverBoundingRect = ref.current?.getBoundingClientRect();
+            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+            const clientOffset = monitor.getClientOffset();
+            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+                return
+            }
+            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+                return
+            }
+
+            dispatch(moveItem({ dragIndex, hoverIndex }))
+
+            item.index = hoverIndex;
+        },
+    }), [index])
+
+    const [{ opacity }, dragRef] = useDrag({
+        type: 'burger_item',
+        item: { index },
+        canDrag: () => {
+            dispatch(backup())
+            return true
+        },
+        collect: (monitor) => ({
+            opacity: monitor.isDragging() ? 0.3 : 1
+        }),
+        end: (item, monitor) => {
+            const dropResult = monitor.getDropResult()
+            if (!dropResult) {
+                dispatch(restore())
+            }
+        }
+    }, [index])
+
+    dragRef(dropRef(ref))
+
+    const onClose = () => dispatch(deleteItem(uuid))
 
     return (
         ingredient &&
-        <div className={styles.element}>
+        <div className={styles.element} style={{ opacity }} ref={ref} data-handler-id={handlerId}>
             <DragIcon />
             <ConstructorElement
                 text={name}
@@ -131,37 +187,15 @@ BurgerElement.propTypes = {
 
 export default function BurgerConstructor() {
 
-    const ingredientsData = useSelector(ingredientsSelectors.items)
     const burgerIngredients = useSelector(constructorSelectors.items)
     const orderNumber = useSelector(constructorSelectors.orderNumber)
     const bun = useSelector(constructorSelectors.bun)
 
-    const [{ canDrop, isOver }, dropRef] = useDrop(() => ({
+    const [, dropRef] = useDrop(() => ({
         accept: 'ingredient',
-        drop: () => ({ name: 'Dustbin' }),
-        // canDrop: () => burgerIngredients.length >= 2,
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-            canDrop: monitor.canDrop(),
-        }),
     }))
 
     const dispatch = useDispatch()
-
-    // useEffect(() => {
-    //     const initialData = [
-    //         // "60d3b41abdacab0026a733c6",
-    //         "60d3b41abdacab0026a733cd",
-    //         "60d3b41abdacab0026a733cf",
-    //         "60d3b41abdacab0026a733d0",
-    //         "60d3b41abdacab0026a733d4",
-    //         "60d3b41abdacab0026a733c8",
-    //         "60d3b41abdacab0026a733cb",
-    //         // "60d3b41abdacab0026a733c6"
-    //     ]
-    //     dispatch(addBun(GetIngredientById('60d3b41abdacab0026a733c6')))
-    //     initialData.map(id => dispatch(addItem(GetIngredientById(id))))
-    // }, [dispatch])
 
     const [showModal, setShowModal] = useState(false);
 
@@ -170,13 +204,10 @@ export default function BurgerConstructor() {
         setShowModal(true)
     }
 
-    const handleDelete = id => dispatch(id ? deleteItem(id) : deleteBun())
-
     const hideModal = () => setShowModal(false)
-
-    const GetIngredientById = (id) => ingredientsData.find(item => item._id === id)
-
-    // const bun = burgerIngredients.length ? GetIngredientById(burgerIngredients[0]) : null
+    const handleMove = (dragIndex, hoverIndex) => {
+        dispatch(moveItem({ dragIndex, hoverIndex }))
+    }
 
     return (
         <section className={styles.section} ref={dropRef}>
@@ -194,8 +225,8 @@ export default function BurgerConstructor() {
                     <BurgerElement
                         ingredient={item}
                         index={index}
-                        key={index}
-                    // handleDelete={handleDelete}
+                        key={item.uuid}
+                        handleMove={handleMove}
                     />
                 )}
             </div>

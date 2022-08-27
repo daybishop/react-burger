@@ -6,8 +6,8 @@ import { useEffect } from 'react';
 import { INGREDIENTS } from '../../utils/constants';
 import { checkResponse } from '../common/api';
 import { startLoading, loadingSuccess, hasError } from '../../services/slices/ingredients';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch } from 'react-redux';
 
 function App() {
