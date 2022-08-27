@@ -16,20 +16,7 @@ import * as constructorSelectors from '../../services/selectors/constructor'
 
 const TotalPrice = () => {
 
-    const ingredientsData = useSelector(ingredientsSelectors.items)
-    const burgerIngredients = useSelector(constructorSelectors.items)
-    const [totalPrice, setTotalPrice] = useState(0);
-
-    useEffect(() => {
-        if (burgerIngredients) {
-            setTotalPrice(
-                burgerIngredients.reduce((prev, current) => {
-                    const ingredient = ingredientsData.find(item => item._id === current)
-                    return prev + (ingredient ? ingredient.price : 0)
-                }, 0)
-            )
-        }
-    }, [burgerIngredients, ingredientsData])
+    const totalPrice = useSelector(constructorSelectors.totalPrice)
 
     return (
         <div className={styles.total_price}>
