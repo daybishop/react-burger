@@ -11,8 +11,9 @@ import { ORDERS } from '../../utils/constants';
 import { checkResponse } from '../common/api';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ingredientsSelectors from '../../services/selectors/ingredients';
-import { addItem, deleteItem, setOrderNumber } from '../../services/slices/constructor';
+import { addBun, addItem, deleteBun, deleteItem, setOrderNumber } from '../../services/slices/constructor';
 import * as constructorSelectors from '../../services/selectors/constructor'
+import { useDrop } from 'react-dnd';
 
 const TotalPrice = () => {
 
@@ -67,41 +68,59 @@ OrderButton.propTypes = {
     handleClick: PropTypes.func.isRequired,
 };
 
-const BurgerElement = ({ ingredient, type, handleDelete, isLocked = false }) => {
-    let props = {}
-    if (ingredient) {
-        props = {
-            text: ingredient.name,
-            price: ingredient.price,
-            thumbnail: ingredient.image,
-        }
-        if (ingredient.type === "bun") {
-            props.text = `${props.text} ${type === "top" ? "(верх)" : type === "bottom" ? "(низ)" : ""}`
-            props.isLocked = isLocked;
-            props.type = type;
-        }
-    }
+const BurgerBun = ({ ingredient, type }) => {
 
-    const onClose = () => handleDelete(ingredient._id)
+    const dispatch = useDispatch()
+    const { name, price, image } = ingredient
+    const isLocked = true;
+
+    const onClose = () => dispatch(deleteBun())
 
     return (
-        ingredient ?
-            <div className={styles.element}>
-                {props.isLocked ? "" : <DragIcon />}
-                <ConstructorElement
-                    {...props}
-                    handleClose={onClose}
-                />
-            </div>
-            : ''
+        ingredient &&
+        <div className={styles.element}>
+            {!isLocked && <DragIcon />}
+            <ConstructorElement
+                text={`${name} ${type === "top" ? "(верх)" : type === "bottom" ? "(низ)" : ""}`}
+                price={price}
+                thumbnail={image}
+                isLocked={isLocked}
+                type={type}
+                handleClose={onClose}
+            />
+        </div>
+    )
+}
+
+BurgerBun.propTypes = {
+    ingredient: (ingredientType),
+    type: PropTypes.oneOf(["top", "bottom"]),
+};
+
+const BurgerElement = ({ ingredient, index }) => {
+
+    const dispatch = useDispatch()
+    const { name, price, image } = ingredient
+
+    const onClose = () => dispatch(deleteItem(index))
+
+    return (
+        ingredient &&
+        <div className={styles.element}>
+            <DragIcon />
+            <ConstructorElement
+                text={name}
+                price={price}
+                thumbnail={image}
+                handleClose={onClose}
+            />
+        </div>
     )
 }
 
 BurgerElement.propTypes = {
     ingredient: (ingredientType),
-    type: PropTypes.oneOf(["top", "bottom"]),
-    handleDelete: PropTypes.func.isRequired,
-    isLocked: PropTypes.bool
+    index: PropTypes.number.isRequired,
 };
 
 
@@ -110,69 +129,80 @@ export default function BurgerConstructor() {
     const ingredientsData = useSelector(ingredientsSelectors.items)
     const burgerIngredients = useSelector(constructorSelectors.items)
     const orderNumber = useSelector(constructorSelectors.orderNumber)
+    const bun = useSelector(constructorSelectors.bun)
 
-    console.log('burgerIngredients', burgerIngredients)
+    const [{ canDrop, isOver }, dropRef] = useDrop(() => ({
+        accept: 'ingredient',
+        drop: () => ({ name: 'Dustbin' }),
+        // canDrop: () => burgerIngredients.length >= 2,
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+            canDrop: monitor.canDrop(),
+        }),
+    }))
 
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        const initialData = [
-            "60d3b41abdacab0026a733c6",
-            "60d3b41abdacab0026a733cd",
-            "60d3b41abdacab0026a733cf",
-            "60d3b41abdacab0026a733d0",
-            "60d3b41abdacab0026a733d4",
-            "60d3b41abdacab0026a733c8",
-            "60d3b41abdacab0026a733cb",
-            "60d3b41abdacab0026a733c6"
-        ]
-        initialData.map(el => dispatch(addItem(el)))
-    }, [dispatch])
+    // useEffect(() => {
+    //     const initialData = [
+    //         // "60d3b41abdacab0026a733c6",
+    //         "60d3b41abdacab0026a733cd",
+    //         "60d3b41abdacab0026a733cf",
+    //         "60d3b41abdacab0026a733d0",
+    //         "60d3b41abdacab0026a733d4",
+    //         "60d3b41abdacab0026a733c8",
+    //         "60d3b41abdacab0026a733cb",
+    //         // "60d3b41abdacab0026a733c6"
+    //     ]
+    //     dispatch(addBun(GetIngredientById('60d3b41abdacab0026a733c6')))
+    //     initialData.map(id => dispatch(addItem(GetIngredientById(id))))
+    // }, [dispatch])
 
     const [showModal, setShowModal] = useState(false);
 
     const handleOrder = (number) => {
-        console.log(number)
         dispatch(setOrderNumber(number))
         setShowModal(true)
     }
 
-    const handleDelete = id => dispatch(deleteItem(id))
+    const handleDelete = id => dispatch(id ? deleteItem(id) : deleteBun())
 
     const hideModal = () => setShowModal(false)
 
     const GetIngredientById = (id) => ingredientsData.find(item => item._id === id)
 
-    const bun = burgerIngredients.length ? GetIngredientById(burgerIngredients[0]) : null
+    // const bun = burgerIngredients.length ? GetIngredientById(burgerIngredients[0]) : null
 
     return (
-        <section className={styles.section}>
-            <div className={styles.top_and_bottom_element}>
-                <BurgerElement
-                    ingredient={bun}
-                    type="top"
-                    handleDelete={el => handleDelete(el)}
-                    isLocked={burgerIngredients.length > 2}
-                />
-            </div>
+        <section className={styles.section} ref={dropRef}>
+            {
+                bun &&
+                <div className={styles.top_and_bottom_element}>
+                    <BurgerBun
+                        ingredient={bun}
+                        type="top"
+                    />
+                </div>
+            }
             <div className={styles.elements}>
-                {burgerIngredients.slice(1, -1).map(el =>
+                {burgerIngredients.map((item, index) =>
                     <BurgerElement
-                        ingredient={GetIngredientById(el)}
-                        key={el}
-                        handleDelete={el => handleDelete(el)}
+                        ingredient={item}
+                        index={index}
+                        key={index}
+                    // handleDelete={handleDelete}
                     />
                 )}
             </div>
-            <div className={styles.top_and_bottom_element}>
-                <BurgerElement
-                    ingredient={bun}
-                    type="bottom"
-                    handleDelete={el => handleDelete(el)}
-                    isLocked={burgerIngredients.length > 2}
-                />
-            </div>
-
+            {
+                bun &&
+                <div className={styles.top_and_bottom_element}>
+                    <BurgerBun
+                        ingredient={bun}
+                        type="bottom"
+                    />
+                </div>
+            }
             <div className={styles.total}>
                 <TotalPrice />
                 <OrderButton handleClick={handleOrder} />

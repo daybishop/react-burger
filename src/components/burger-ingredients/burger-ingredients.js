@@ -10,6 +10,8 @@ import IngredientDetails from './ingredient-details'
 import { useDispatch, useSelector } from 'react-redux';
 import * as ingredientsSelectors from '../../services/selectors/ingredients';
 import { clearSelectedItem, selectItem } from '../../services/slices/ingredients';
+import { useDrag } from 'react-dnd';
+import { addItem, addBun } from '../../services/slices/constructor';
 
 const Tabs = ({ handleTabClick }) => {
 
@@ -40,9 +42,28 @@ Tabs.propTypes = {
 };
 
 const Ingredient = ({ item, handleClick }) => {
+
+    const dispatch = useDispatch()
+
+    const [{ opacity }, dragRef] = useDrag(
+        () => ({
+            type: 'ingredient',
+            item: item,
+            collect: (monitor) => ({
+                opacity: monitor.isDragging() ? 1 : 1
+            }),
+            end: (item, monitor) => {
+                const dropResult = monitor.getDropResult()
+                if (item && dropResult) {
+                    dispatch(item.type === 'bun' ? addBun(item) : addItem(item))
+                }
+            }
+        }),
+        []
+    )
     return (
         <>
-            <li className={styles.item} onClick={e => handleClick(item)}>
+            <li className={styles.item} onClick={e => handleClick(item)} ref={dragRef} style={{ opacity }}>
                 <Counter className={styles.counter} count={1} />
                 <img className={styles.item_img} src={item.image} alt={item.name} />
                 <span className={`text text_type_digits-default ${styles.item_price}`}>
@@ -63,9 +84,6 @@ Ingredient.propTypes = {
 const IngredientsSection = ({ type, handleClick }) => {
 
     const ingredientsData = useSelector(ingredientsSelectors.items)
-
-    console.log('ingredientsSelectors.list', ingredientsSelectors.items)
-    console.log('IngredientsSection', ingredientsData)
 
     const types = {
         main: "Начинка",
