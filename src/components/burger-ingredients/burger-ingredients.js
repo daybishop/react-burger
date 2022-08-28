@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -9,32 +9,39 @@ import { ingredientType } from '../../utils/types'
 import IngredientDetails from './ingredient-details'
 import { useDispatch, useSelector } from 'react-redux';
 import * as ingredientsSelectors from '../../services/selectors/ingredients';
-import { clearSelectedItem, selectItem } from '../../services/slices/ingredients';
+import { clearSelectedItem, selectItem, setCurrentTab } from '../../services/slices/ingredients';
 import { useDrag } from 'react-dnd';
 import { addItem, addBun } from '../../services/slices/constructor';
 import * as constructorSelectors from '../../services/selectors/constructor';
 
 const Tabs = ({ handleTabClick, refProp }) => {
 
-    const [current, setCurrent] = useState("bun");
+    const currentTab = useSelector(ingredientsSelectors.currentTab)
+    const dispatch = useDispatch()
 
     const onClick = (e) => {
-        setCurrent(e)
+        dispatch(setCurrentTab(e))
         handleTabClick(e)
     }
 
+    const tabs = {
+        bun: 'Булки',
+        sauce: 'Соусы',
+        main: 'Начинки',
+    }
+
     return (
-        <div className={styles.tabs}>
-            <Tab value="bun" active={current === "bun"} onClick={onClick}>
-                Булки
-            </Tab>
-            <Tab value="sauce" active={current === "sauce"} onClick={onClick}>
-                Соусы
-            </Tab>
-            <Tab value="main" active={current === "main"} onClick={onClick}>
-                Начинки
-            </Tab>
-        </div>
+        <div className={styles.tabs} ref={refProp}>
+            {
+                Object.keys(tabs).map(key => {
+                    return (
+                        < Tab key={key} value={key} active={currentTab === key} onClick={onClick} >
+                            {tabs[key]}
+                        </Tab>
+                    )
+                })
+            }
+        </div >
     )
 }
 
@@ -110,7 +117,7 @@ const IngredientsSection = ({ type, handleClick, refProp }) => {
     });
 
     return (
-        <section className={styles.section}>
+        <section className={styles.section} ref={refProp}>
             {/* Заголовок списка определённого типа */}
             < p id={`ingredient_section_${type}`} className={`text text_type_main-medium pt-10 pb-6 ${styles.section_title}`}>
                 {types[type]}
@@ -143,6 +150,7 @@ export default function BurgerIngredients() {
 
     const [showModal, setShowModal] = useState(false);
     const selectedItem = useSelector(ingredientsSelectors.selectedItem)
+    const currentTab = useSelector(ingredientsSelectors.currentTab)
 
     const dispatch = useDispatch()
 
@@ -159,16 +167,39 @@ export default function BurgerIngredients() {
         document.getElementById(`ingredient_section_${e}`).scrollIntoView({ block: "start", behavior: "smooth" })
     }
 
+
+    const handleScroll = () => {
+        const tabsY = refTabs.current.getBoundingClientRect().y
+        let sectionDistance = {}
+        for (const key in sectionRefs) {
+            const sectionY = sectionRefs[key].current.getBoundingClientRect().y
+            sectionDistance[key] = Math.abs(sectionY - tabsY)
+        }
+        const nearestDistance = Math.min(...Object.values(sectionDistance))
+        const nearestSection = Object.keys(sectionDistance).find(key => sectionDistance[key] === nearestDistance)
+        if (currentTab !== nearestSection) {
+            dispatch(setCurrentTab(nearestSection))
+        }
+    };
+
+    const sections = ['bun', 'sauce', 'main']
+    const refTabs = useRef(null)
+    const sectionRefs = {
+        bun: useRef(null),
+        sauce: useRef(null),
+        main: useRef(null),
+    }
+
     return (
         <section className={styles.section}>
             <p className="text text_type_main-large pt-10 pb-5">
                 Соберите бургер
             </p>
-            <Tabs handleTabClick={onTabClick} />
-            <div className={styles.scroll_box}>
-                <IngredientsSection type="bun" handleClick={onShowModal} />
-                <IngredientsSection type="sauce" handleClick={onShowModal} />
-                <IngredientsSection type="main" handleClick={onShowModal} />
+            <Tabs handleTabClick={onTabClick} refProp={refTabs} />
+            <div className={styles.scroll_box} onScroll={handleScroll}>
+                {
+                    sections.map(el => <IngredientsSection key={el} type={el} handleClick={onShowModal} refProp={sectionRefs[el]} />)
+                }
             </div>
             <Modal show={showModal} header="Детали ингредиента" handleClose={hideModal}>
                 <IngredientDetails item={selectedItem} />
