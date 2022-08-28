@@ -5,6 +5,7 @@ const initialState = {
     isLoading: false,
     error: false,
     selectedItem: null,
+    currentTab: 'bun',
 }
 
 export const ingredientsSlice = createSlice({
@@ -28,10 +29,16 @@ export const ingredientsSlice = createSlice({
         },
         clearSelectedItem: (state) => {
             state.selectedItem = null
-        }
+        },
+        setCurrentTab: (state, action) => {
+            const currentTab = action.payload
+            if (state.currentTab !== currentTab) {
+                state.currentTab = currentTab
+            }
+        },
     },
 })
 
-export const { startLoading, loadingSuccess, hasError, selectItem, clearSelectedItem } = ingredientsSlice.actions
+export const { startLoading, loadingSuccess, hasError, selectItem, clearSelectedItem, setCurrentTab } = ingredientsSlice.actions
 
 export default ingredientsSlice.reducer
