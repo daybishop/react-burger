@@ -53,7 +53,6 @@ const Ingredient = ({ item, handleClick }) => {
                 ? 2
                 : 0
             : burgerIngredients.reduce((prev, burgerItem) => {
-                console.log(item, burgerItem)
                 return prev + (item._id === burgerItem._id ? 1 : 0)
             }, 0)
 
