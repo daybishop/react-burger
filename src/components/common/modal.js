@@ -45,7 +45,7 @@ export default function Modal({ show, children, header, handleClose }) {
 }
 
 Modal.propTypes = {
-    show: PropTypes.bool.isRequired,
+    show: PropTypes.bool,
     children: PropTypes.node.isRequired,
     header: PropTypes.string,
     handleClose: PropTypes.func.isRequired,

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -13,6 +13,7 @@ import { clearSelectedItem, selectItem, setCurrentTab } from '../../services/sli
 import { useDrag } from 'react-dnd';
 import { addItem, addBun } from '../../services/slices/constructor';
 import * as constructorSelectors from '../../services/selectors/constructor';
+import { fetchIngredients } from '../../services/actions/ingredients';
 
 const Tabs = ({ handleTabClick, refProp }) => {
 
@@ -153,6 +154,10 @@ export default function BurgerIngredients() {
     const currentTab = useSelector(ingredientsSelectors.currentTab)
 
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchIngredients());
+    }, [dispatch]);
 
     const onShowModal = (item) => {
         setShowModal(true);

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -7,12 +7,11 @@ import Modal from '../common/modal'
 import { ingredientType } from '../../utils/types'
 import styles from './burger-constructor.module.css';
 import OrderDetails from './order-details'
-import { ORDERS } from '../../utils/constants';
-import { checkResponse } from '../common/api';
 import { useDispatch, useSelector } from 'react-redux';
-import { backup, deleteBun, deleteItem, moveItem, restore, setOrderNumber } from '../../services/slices/constructor';
+import { backup, clearOrderData, deleteBun, deleteItem, hideOrder, moveItem, restore } from '../../services/slices/constructor';
 import * as constructorSelectors from '../../services/selectors/constructor'
 import { useDrag, useDrop } from 'react-dnd';
+import { getOrderNumber } from '../../services/actions/orders';
 
 const TotalPrice = () => {
 
@@ -28,35 +27,19 @@ const TotalPrice = () => {
     )
 }
 
-const OrderButton = ({ handleClick }) => {
+const OrderButton = () => {
 
     const burgerIngredients = useSelector(constructorSelectors.items)
     const bun = useSelector(constructorSelectors.bun)
+
+    const dispatch = useDispatch()
 
     const onClick = () => {
         const order_ids = bun
             ? [bun._id, ...burgerIngredients.map(item => item._id), bun._id]
             : []
         if (burgerIngredients.length) {
-            fetch(ORDERS, {
-                method: "post",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    ingredients: order_ids
-                })
-            })
-                .then(res => checkResponse(res))
-                .then(data => {
-                    if (data.success) {
-                        handleClick(data.order.number)
-                    } else throw new Error("Error data loading");
-                })
-                .catch(e => {
-                    console.log(e)
-                })
+            dispatch(getOrderNumber(order_ids))
         }
     }
 
@@ -66,10 +49,6 @@ const OrderButton = ({ handleClick }) => {
         </Button>
     )
 }
-
-OrderButton.propTypes = {
-    handleClick: PropTypes.func.isRequired,
-};
 
 const BurgerBun = ({ ingredient, type }) => {
 
@@ -196,15 +175,11 @@ export default function BurgerConstructor() {
     }))
 
     const dispatch = useDispatch()
-
-    const [showModal, setShowModal] = useState(false);
-
-    const handleOrder = (number) => {
-        dispatch(setOrderNumber(number))
-        setShowModal(true)
+    const showOrderModal = useSelector(constructorSelectors.showOrderModal)
+    const hideModal = () => {
+        dispatch(hideOrder())
+        dispatch(clearOrderData())
     }
-
-    const hideModal = () => setShowModal(false)
     const handleMove = (dragIndex, hoverIndex) => {
         dispatch(moveItem({ dragIndex, hoverIndex }))
     }
@@ -241,10 +216,10 @@ export default function BurgerConstructor() {
             }
             <div className={styles.total}>
                 <TotalPrice />
-                <OrderButton handleClick={handleOrder} />
+                <OrderButton />
             </div>
 
-            <Modal show={showModal} handleClose={hideModal}>
+            <Modal show={showOrderModal} handleClose={hideModal}>
                 <OrderDetails id={String(orderNumber)} />
             </Modal>
         </section>

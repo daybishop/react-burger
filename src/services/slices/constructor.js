@@ -7,6 +7,7 @@ const initialState = {
     bun: null,
     totalPrice: 0,
     orderNumber: null,
+    showOrderModal: false,
 }
 
 const calculateTotalPrice = state => (state.bun ? 2 * state.bun.price : 0) + state.items.reduce((prev, item) => prev + item.price, 0)
@@ -31,6 +32,11 @@ export const constructorSlice = createSlice({
             state.bun = null
             state.totalPrice = calculateTotalPrice(state)
         },
+        clearOrderData: state => {
+            state.bun = null
+            state.items = []
+            state.totalPrice = calculateTotalPrice(state)
+        },
         setOrderNumber: (state, action) => {
             state.orderNumber = action.payload
         },
@@ -48,9 +54,15 @@ export const constructorSlice = createSlice({
         restore: (state) => {
             state.items = state.backupItems
         },
+        showOrder: (state) => {
+            state.showOrderModal = true
+        },
+        hideOrder: (state) => {
+            state.showOrderModal = false
+        },
     },
 })
 
-export const { addItem, deleteItem, addBun, deleteBun, setOrderNumber, moveItem, backup, restore } = constructorSlice.actions
+export const { addItem, deleteItem, addBun, deleteBun, clearOrderData, setOrderNumber, moveItem, backup, restore, showOrder, hideOrder } = constructorSlice.actions
 
 export default constructorSlice.reducer
