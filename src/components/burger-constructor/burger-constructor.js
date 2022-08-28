@@ -75,14 +75,14 @@ const BurgerBun = ({ ingredient, type }) => {
 
     const dispatch = useDispatch()
     const { name, price, image } = ingredient
-    const isLocked = true;
+    const burgerIngredients = useSelector(constructorSelectors.items)
+    const isLocked = burgerIngredients.length > 0;
 
     const onClose = () => dispatch(deleteBun())
 
     return (
         ingredient &&
         <div className={styles.element}>
-            {!isLocked && <DragIcon />}
             <ConstructorElement
                 text={`${name} ${type === "top" ? "(верх)" : type === "bottom" ? "(низ)" : ""}`}
                 price={price}
