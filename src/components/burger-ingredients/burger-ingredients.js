@@ -14,7 +14,7 @@ import { useDrag } from 'react-dnd';
 import { addItem, addBun } from '../../services/slices/constructor';
 import * as constructorSelectors from '../../services/selectors/constructor';
 
-const Tabs = ({ handleTabClick }) => {
+const Tabs = ({ handleTabClick, refProp }) => {
 
     const [current, setCurrent] = useState("bun");
 
@@ -40,6 +40,10 @@ const Tabs = ({ handleTabClick }) => {
 
 Tabs.propTypes = {
     handleTabClick: PropTypes.func.isRequired,
+    refProp: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+    ]),
 };
 
 const Ingredient = ({ item, handleClick }) => {
@@ -92,7 +96,7 @@ Ingredient.propTypes = {
     handleClick: PropTypes.func.isRequired,
 };
 
-const IngredientsSection = ({ type, handleClick }) => {
+const IngredientsSection = ({ type, handleClick, refProp }) => {
 
     const ingredientsData = useSelector(ingredientsSelectors.items)
 
@@ -129,6 +133,10 @@ const IngredientsSection = ({ type, handleClick }) => {
 IngredientsSection.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
     handleClick: PropTypes.func.isRequired,
+    refProp: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+    ]),
 };
 
 export default function BurgerIngredients() {
