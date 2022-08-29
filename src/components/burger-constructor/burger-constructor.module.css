@@ -4,8 +4,10 @@
     flex-wrap: wrap;
     gap: 16px;
     padding-top: 100px;
-    height: 700px;
+    height: auto;
     align-items: flex-end;
+    width: 600px;
+    user-select: none;
 }
 
 
@@ -30,6 +32,7 @@
     flex-direction: row;
     align-items: center;
     margin-right: 20px;
+    margin-top: auto;
 }
 
 .total_price {
@@ -46,9 +49,11 @@
     gap: 16px;
     overflow-y: auto;
     max-height: 368px;
+    min-height: 368px;
     scrollbar-color: #8585AD #1C1C21;
     scrollbar-width: thin;
     overflow-x: hidden;
+    width: 100%;
 }
 
 .elements::-webkit-scrollbar {

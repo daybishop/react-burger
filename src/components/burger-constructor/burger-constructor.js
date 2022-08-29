@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -7,100 +7,221 @@ import Modal from '../common/modal'
 import { ingredientType } from '../../utils/types'
 import styles from './burger-constructor.module.css';
 import OrderDetails from './order-details'
+import { useDispatch, useSelector } from 'react-redux';
+import { backup, clearOrderData, deleteBun, deleteItem, hideOrder, moveItem, restore } from '../../services/slices/constructor';
+import * as constructorSelectors from '../../services/selectors/constructor'
+import { useDrag, useDrop } from 'react-dnd';
+import { getOrderNumber } from '../../services/actions/orders';
 
-const Order = ({ onClick }) => {
+const TotalPrice = () => {
+
+    const totalPrice = useSelector(constructorSelectors.totalPrice)
+
     return (
-        <div className={styles.total}>
-            <div className={styles.total_price}>
-                <span className="text text_type_digits-medium">
-                    610
-                </span>
-                <CurrencyIcon />
-            </div>
-
-            <Button type="primary" size="large" onClick={onClick}>
-                Оформить заказ
-            </Button>
+        <div className={styles.total_price}>
+            <span className="text text_type_digits-medium">
+                {totalPrice}
+            </span>
+            <CurrencyIcon />
         </div>
     )
 }
 
-Order.propTypes = {
-    onClick: PropTypes.func.isRequired,
-};
+const OrderButton = () => {
 
-const BurgerElement = ({ ingredient, type }) => {
-    let props = {}
-    if (ingredient) {
-        props = {
-            text: ingredient.name,
-            price: ingredient.price,
-            thumbnail: ingredient.image
-        }
-        if (ingredient.type === "bun") {
-            props.text = `${props.text} ${type === "top" ? "(верх)" : type === "bottom" ? "(низ)" : ""}`
-            props.isLocked = true;
-            props.type = type;
+    const burgerIngredients = useSelector(constructorSelectors.items)
+    const bun = useSelector(constructorSelectors.bun)
+
+    const dispatch = useDispatch()
+
+    const onClick = () => {
+        const order_ids = bun
+            ? [bun._id, ...burgerIngredients.map(item => item._id), bun._id]
+            : []
+        if (burgerIngredients.length) {
+            dispatch(getOrderNumber(order_ids))
         }
     }
+
     return (
-        ingredient ?
-            <div className={styles.element}>
-                {props.isLocked ? "" : <DragIcon />}
-                <ConstructorElement
-                    {...props}
-                />
-            </div>
-            : ''
+        <Button type="primary" size="large" onClick={onClick}>
+            Оформить заказ
+        </Button>
+    )
+}
+
+const BurgerBun = ({ ingredient, type }) => {
+
+    const dispatch = useDispatch()
+    const { name, price, image } = ingredient
+    const burgerIngredients = useSelector(constructorSelectors.items)
+    const isLocked = burgerIngredients.length > 0;
+
+    const onClose = () => dispatch(deleteBun())
+
+    return (
+        ingredient &&
+        <div className={styles.element}>
+            <ConstructorElement
+                text={`${name} ${type === "top" ? "(верх)" : type === "bottom" ? "(низ)" : ""}`}
+                price={price}
+                thumbnail={image}
+                isLocked={isLocked}
+                type={type}
+                handleClose={onClose}
+            />
+        </div>
+    )
+}
+
+BurgerBun.propTypes = {
+    ingredient: (ingredientType),
+    type: PropTypes.oneOf(["top", "bottom"]),
+};
+
+const BurgerElement = ({ ingredient, index }) => {
+
+    const dispatch = useDispatch()
+    const { name, price, image, uuid } = ingredient
+    const ref = useRef(null)
+
+    const [{ handlerId }, dropRef] = useDrop(() => ({
+        accept: 'burger_item',
+        collect(monitor) {
+            return {
+                handlerId: monitor.getHandlerId(),
+            }
+        },
+        hover: (item, monitor) => {
+            if (!ref.current) {
+                return
+            }
+
+            const dragIndex = item.index;
+            const hoverIndex = index;
+
+            if (dragIndex === hoverIndex) {
+                return
+            }
+
+            const hoverBoundingRect = ref.current?.getBoundingClientRect();
+            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+            const clientOffset = monitor.getClientOffset();
+            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+                return
+            }
+            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+                return
+            }
+
+            dispatch(moveItem({ dragIndex, hoverIndex }))
+
+            item.index = hoverIndex;
+        },
+    }), [index])
+
+    const [{ opacity }, dragRef] = useDrag({
+        type: 'burger_item',
+        item: { index },
+        canDrag: () => {
+            dispatch(backup())
+            return true
+        },
+        collect: (monitor) => ({
+            opacity: monitor.isDragging() ? 0.3 : 1
+        }),
+        end: (item, monitor) => {
+            const dropResult = monitor.getDropResult()
+            if (!dropResult) {
+                dispatch(restore())
+            }
+        }
+    }, [index])
+
+    dragRef(dropRef(ref))
+
+    const onClose = () => dispatch(deleteItem(uuid))
+
+    return (
+        ingredient &&
+        <div className={styles.element} style={{ opacity }} ref={ref} data-handler-id={handlerId}>
+            <DragIcon />
+            <ConstructorElement
+                text={name}
+                price={price}
+                thumbnail={image}
+                handleClose={onClose}
+            />
+        </div>
     )
 }
 
 BurgerElement.propTypes = {
     ingredient: (ingredientType),
-    type: PropTypes.oneOf(["top", "bottom"]),
+    index: PropTypes.number.isRequired,
 };
 
-export default function BurgerConstructor({ data }) {
 
-    const [showModal, setShowModal] = useState(false);
+export default function BurgerConstructor() {
 
-    const onShowModal = () => setShowModal(true);
-    const hideModal = () => setShowModal(false);
+    const burgerIngredients = useSelector(constructorSelectors.items)
+    const orderNumber = useSelector(constructorSelectors.orderNumber)
+    const bun = useSelector(constructorSelectors.bun)
 
-    const elements = [
-        "60d3b41abdacab0026a733cd",
-        "60d3b41abdacab0026a733cf",
-        "60d3b41abdacab0026a733d0",
-        "60d3b41abdacab0026a733d4",
-        "60d3b41abdacab0026a733c8",
-        "60d3b41abdacab0026a733cb"
-    ]
+    const [, dropRef] = useDrop(() => ({
+        accept: 'ingredient',
+    }))
 
-    const getIngredientById = id => data.find(item => item._id === id)
-    const bun = getIngredientById("60d3b41abdacab0026a733c6")
+    const dispatch = useDispatch()
+    const showOrderModal = useSelector(constructorSelectors.showOrderModal)
+    const hideModal = () => {
+        dispatch(hideOrder())
+        dispatch(clearOrderData())
+    }
+    const handleMove = (dragIndex, hoverIndex) => {
+        dispatch(moveItem({ dragIndex, hoverIndex }))
+    }
 
     return (
-        <section className={styles.section}>
-            <div className={styles.top_and_bottom_element}>
-                <BurgerElement ingredient={bun} type="top" />
-            </div>
+        <section className={styles.section} ref={dropRef}>
+            {
+                bun &&
+                <div className={styles.top_and_bottom_element}>
+                    <BurgerBun
+                        ingredient={bun}
+                        type="top"
+                    />
+                </div>
+            }
             <div className={styles.elements}>
-                {elements.map(el =>
-                    <BurgerElement ingredient={getIngredientById(el)} key={el} />
+                {burgerIngredients.map((item, index) =>
+                    <BurgerElement
+                        ingredient={item}
+                        index={index}
+                        key={item.uuid}
+                        handleMove={handleMove}
+                    />
                 )}
             </div>
-            <div className={styles.top_and_bottom_element}>
-                <BurgerElement ingredient={bun} type="bottom" />
-            </div>
-            <Order onClick={onShowModal} />
             {
-                <Modal show={showModal} handleClose={hideModal}>
-                    <OrderDetails id="034536" />
-                </Modal>
+                bun &&
+                <div className={styles.top_and_bottom_element}>
+                    <BurgerBun
+                        ingredient={bun}
+                        type="bottom"
+                    />
+                </div>
             }
+            <div className={styles.total}>
+                <TotalPrice />
+                <OrderButton />
+            </div>
+
+            <Modal show={showOrderModal} handleClose={hideModal}>
+                <OrderDetails id={String(orderNumber)} />
+            </Modal>
         </section>
     );
 }
-BurgerConstructor.propTypes = {
-    data: PropTypes.arrayOf(ingredientType).isRequired,
-};

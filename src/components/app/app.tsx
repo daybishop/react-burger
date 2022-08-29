@@ -2,38 +2,27 @@ import './app.module.css';
 import AppHeader from '../../components/app-header/app-header';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
-import { useEffect, useState } from 'react';
-
-const API = "https://norma.nomoreparties.space/api"
-const INGREDIENTS = `${API}/ingredients`
+import { useEffect } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useDispatch } from 'react-redux';
+import { fetchIngredients } from '../../services/actions/ingredients';
 
 function App() {
-  const [ingredientsData, setIingredientsData] = useState([]);
 
-  useEffect(() => {
-    fetch(INGREDIENTS)
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Ошибка ${res.status}`);
-      })
-      .then(data => {
-        if (data.success) {
-          setIingredientsData(data.data)
-        } else throw new Error("Error data loading");
-      })
-      .catch(e => {
-        console.log(e)
-      });
-  }, [])
+  // const dispatch = useDispatch()
+  // useEffect(() => {
+  //   dispatch(fetchIngredients())
+  // }, [])
 
   return (
     <div className="App">
       <AppHeader />
       <main>
-        <BurgerIngredients data={ingredientsData} />
-        <BurgerConstructor data={ingredientsData} />
+        <DndProvider backend={HTML5Backend}>
+          <BurgerIngredients />
+          <BurgerConstructor />
+        </DndProvider>
       </main>
     </div>
   );

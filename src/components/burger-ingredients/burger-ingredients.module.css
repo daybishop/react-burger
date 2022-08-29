@@ -9,7 +9,7 @@
 
 .scroll_box {
     overflow-y: auto;
-    max-height: 660px;
+    max-height: 600px;
     scrollbar-color: #8585AD #1C1C21;
     scrollbar-width: thin;
     overflow-x: hidden;
