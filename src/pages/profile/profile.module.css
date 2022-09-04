@@ -18,13 +18,32 @@
 }
 
 .links>li {
-    color: #F2F2F3;
+    /* color: #F2F2F3; */
     height: 64px;
 }
 
-.links>li>a {
+a {
     text-decoration: none;
 }
+
+.link {
+    /* color: #F2F2F3; */
+    color: #8585AD;
+    /* height: 64px; */
+}
+
+.activeLink {
+    color: #F2F2F3;
+    /* height: 64px; */
+}
+
+/* .links>li>a,
+a:visited,
+a:hover,
+a:active {
+    color: #8585AD;
+    text-decoration: none;
+} */
 
 .links>span {
     font-weight: 400;
