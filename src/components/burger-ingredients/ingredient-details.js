@@ -1,4 +1,7 @@
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { ingredientsSelectors } from '../../services/selectors/ingredients';
 import { ingredientType } from '../../utils/types'
 import styles from './ingredient-details.module.css';
 
@@ -53,3 +56,20 @@ export default function IngredientDetails({ item }) {
 IngredientDetails.propTypes = {
     item: ingredientType,
 };
+
+export const IngredientDetailsById = () => {
+    const items = useSelector(ingredientsSelectors.items)
+    const { id } = useParams()
+    const item = items.find((item) => item._id === id)
+
+    console.log(items, item, id)
+
+    return (
+        item
+            ?
+            <div className={styles.wrapper}>
+                <IngredientDetails item={item} />
+            </div>
+            : null
+    )
+}
