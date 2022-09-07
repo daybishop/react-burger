@@ -33,12 +33,11 @@ const init = {
 }
 
 export const loginRequest = async form => {
-    return fetch(LOGIN, {
+    return await fetch(LOGIN, {
         ...init,
         body: JSON.stringify(form),
     })
         .then(checkResponse)
-        .catch(reason => console.log(reason))
 }
 
 export const logoutRequest = async () => {
@@ -74,17 +73,12 @@ export const resetPasswordRequest = async form => {
 }
 
 export const getUserRequest = async () => {
-    return getCookie('accessToken')
-        ?
-        fetch(USER, {
-            ...init,
-            method: 'GET',
-            headers: { ...init.headers, authorization: getCookie('accessToken') },
-        })
-            .then(checkResponse)
-            .catch(reason => refreshTokenRequest())
-        :
-        Promise.reject('accessToken not found')
+    return fetch(USER, {
+        ...init,
+        method: 'GET',
+        headers: { ...init.headers, authorization: getCookie('accessToken') },
+    })
+        .then(checkResponse)
 }
 
 export const refreshTokenRequest = async () => {
@@ -99,5 +93,4 @@ export const refreshTokenRequest = async () => {
                 setCookie('refreshToken', data.refreshToken)
             }
         })
-        .catch(reason => console.log(reason))
 }

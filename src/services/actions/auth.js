@@ -15,11 +15,9 @@ export const loginUser = (form) => dispath => {
 }
 
 export const logoutUser = () => dispath => {
-    console.log('222')
     logoutRequest()
         .then(data => {
             if (data.success) {
-                console.log(data.user)
                 dispath(resetUser(data.user))
                 deleteCookie('accessToken')
                 deleteCookie('refreshToken')

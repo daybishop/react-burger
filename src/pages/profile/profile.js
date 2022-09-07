@@ -11,13 +11,11 @@ export function ProfilePage() {
     const history = useHistory()
 
     const onChange = e => {
-        console.log(name, email)
         history.replace({ pathname: '/' });
     }
 
     return (
         <div className={styles.wrapper}>
-            {/* <div className={styles.links}> */}
             <ul className={styles.links}>
                 <li>
                     <NavLink
@@ -43,7 +41,6 @@ export function ProfilePage() {
                 </li>
                 <span>В этом разделе вы можете изменить свои персональные данные</span>
             </ul>
-            {/* </div> */}
             <div className={styles.user_data}>
                 <form className={styles.form}>
                     <Input onChange={onChange} placeholder='Имя' name='name' value={name || ''}></Input>
