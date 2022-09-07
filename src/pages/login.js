@@ -1,30 +1,28 @@
-import { useEffect } from 'react';
 import styles from './register.module.css';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUser, loginUser } from '../services/actions/auth';
-import { userSelectors } from '../services/selectors/user';
+import { Link, Redirect, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../services/actions/auth';
 import { useFormValues } from '../utils/hooks';
+import { isAuth } from '../utils/auth';
 
 export function LoginPage() {
 
     const { values, handleChange } = useFormValues({})
     const dispatch = useDispatch()
     const history = useHistory()
-    const userIsActive = useSelector(userSelectors.isActive)
-
-    useEffect(() => {
-        dispatch(getUser())
-        if (userIsActive) {
-            history.replace({ pathname: '/' })
-        }
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    const auth = isAuth()
 
     const onSubmit = e => {
         e.preventDefault()
         dispatch(loginUser(values))
-        history.replace({ pathname: history.location.state?.from || '/' })
+        history.replace(history.location.state?.from || '/')
+    }
+
+    if (auth) {
+        return (
+            <Redirect to={history.location.state?.from.pathname || '/'} />
+        )
     }
 
     return (
