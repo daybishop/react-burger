@@ -13,6 +13,7 @@ import { clearSelectedItem, selectItem, setCurrentTab } from '../../services/sli
 import { useDrag } from 'react-dnd';
 import { addItem, addBun } from '../../services/slices/constructor';
 import * as constructorSelectors from '../../services/selectors/constructor';
+import { Link, useLocation } from 'react-router-dom';
 
 const Tabs = ({ handleTabClick, refProp }) => {
 
@@ -55,6 +56,8 @@ Tabs.propTypes = {
 
 const Ingredient = ({ item, handleClick }) => {
 
+    let location = useLocation()
+    const id = item['_id']
     const dispatch = useDispatch()
     const burgerIngredients = useSelector(constructorSelectors.items)
     const bun = useSelector(constructorSelectors.bun)
@@ -84,8 +87,15 @@ const Ingredient = ({ item, handleClick }) => {
         []
     )
     return (
-        <>
-            <li className={styles.item} onClick={e => handleClick(item)} ref={dragRef} style={{ opacity }}>
+        <li className={styles.item} onClick={e => handleClick(item)} ref={dragRef} style={{ opacity }}>
+            <Link
+                className={styles.link}
+                key={id}
+                to={{
+                    pathname: `/ingredients/${id}`,
+                    state: { background: location }
+                }}
+            >
                 {count > 0 && <Counter className={styles.counter} count={count} />}
                 <img className={styles.item_img} src={item.image} alt={item.name} />
                 <span className={`text text_type_digits-default ${styles.item_price}`}>
@@ -93,8 +103,8 @@ const Ingredient = ({ item, handleClick }) => {
                     <CurrencyIcon />
                 </span>
                 <span className={`text text_type_main-default ${styles.item_title}`}>{item.name}</span>
-            </li>
-        </>
+            </Link>
+        </li>
     )
 }
 
@@ -201,9 +211,6 @@ export default function BurgerIngredients() {
                     sections.map(el => <IngredientsSection key={el} type={el} handleClick={onShowModal} refProp={sectionRefs[el]} />)
                 }
             </div>
-            <Modal show={showModal} header="Детали ингредиента" handleClose={hideModal}>
-                <IngredientDetails item={selectedItem} />
-            </Modal>
         </section>
     );
 
