@@ -1,6 +1,6 @@
 import styles from './profile.module.css';
 import { EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, NavLink, useHistory } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { userSelectors } from '../../services/selectors/user';
 
@@ -34,10 +34,11 @@ export function ProfilePage() {
                     </NavLink>
                 </li>
                 <li>
-                    <Link
+                    <NavLink
                         to='/logout'
                         exact
-                        className={styles.link}>Выход</Link>
+                        className={styles.link}
+                        activeClassName={styles.activeLink}>Выход</NavLink>
                 </li>
                 <span>В этом разделе вы можете изменить свои персональные данные</span>
             </ul>
