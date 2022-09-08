@@ -1,17 +1,17 @@
 import styles from './register.module.css';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../services/actions/auth';
 import { useFormValues } from '../utils/hooks';
-import { isAuth } from '../utils/auth';
+import { userSelectors } from '../services/selectors/user';
 
 export function LoginPage() {
 
-    const { values, handleChange } = useFormValues({})
+    const { values, handleChange } = useFormValues({ email: '', password: '' })
     const dispatch = useDispatch()
     const history = useHistory()
-    const auth = isAuth()
+    const isActive = useSelector(userSelectors.isActive)
 
     const onSubmit = e => {
         e.preventDefault()
@@ -19,11 +19,7 @@ export function LoginPage() {
         history.replace(history.location.state?.from || '/')
     }
 
-    if (auth) {
-        return (
-            <Redirect to={history.location.state?.from.pathname || '/'} />
-        )
-    }
+    if (isActive) return (<Redirect to={history.location.state?.from.pathname || '/'} />)
 
     return (
         <div className={styles.wrapper}>
@@ -36,5 +32,5 @@ export function LoginPage() {
                 <span>Забыли пароль? <Link to='/forgot-password'>Восстановить пароль</Link></span>
             </form>
         </div>
-    );
+    )
 } 

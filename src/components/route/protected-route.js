@@ -1,13 +1,19 @@
+import { useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
-import { isAuth } from '../../utils/auth';
+import { userSelectors } from '../../services/selectors/user';
 
 export function ProtectedRoute({ children, ...rest }) {
 
-    const auth = isAuth()
+    const isLoading = useSelector(userSelectors.isLoading)
+    const isActive = useSelector(userSelectors.isActive)
+
+    console.log('isLoading', isLoading)
+
+    if (isLoading) return null
 
     return (
         <Route {...rest} render={prop => (
-            auth
+            isActive
                 ? (children)
                 : <Redirect to={{ pathname: '/login', state: { from: prop.location } }} />
         )}
