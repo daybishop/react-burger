@@ -1,8 +1,9 @@
 import { deleteCookie, setCookie } from "../../utils/cookie";
 import { forgotPasswordRequest, getUserRequest, loginRequest, logoutRequest, registerRequest, resetPasswordRequest } from "../api/auth"
-import { resetUser, setIsPasswordReset, setUser } from "../slices/user"
+import { loading, resetUser, setIsPasswordReset, setUser } from "../slices/user"
 
 export const loginUser = (form) => dispatch => {
+    dispatch(loading())
     loginRequest(form)
         .then(data => {
             if (data.success) {
