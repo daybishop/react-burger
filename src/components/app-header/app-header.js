@@ -20,8 +20,6 @@ const HeaderLink = ({ children, title, to }) => {
 }
 
 HeaderLink.propTypes = {
-    className: PropTypes.string.isRequired,
-    icon: PropTypes.objectOf(BurgerIcon),
     title: PropTypes.string.isRequired,
     to: PropTypes.string.isRequired,
 };
