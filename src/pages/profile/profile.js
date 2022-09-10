@@ -1,17 +1,41 @@
 import styles from './profile.module.css';
-import { EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { NavLink, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
+import { NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { userSelectors } from '../../services/selectors/user';
+import { useEffect } from 'react';
+import { getUser, setUserData } from '../../services/actions/auth';
+import { useFormValues } from '../../utils/hooks';
+import { useState } from 'react';
 
 export function ProfilePage() {
 
+    const { values, setValues, handleChange } = useFormValues({ name: '', email: '' })
+    const [userDataChanged, setUserDataChanged] = useState(false)
     const name = useSelector(userSelectors.name)
     const email = useSelector(userSelectors.email)
-    const history = useHistory()
+    const dispatch = useDispatch()
 
-    const onChange = e => {
-        history.replace({ pathname: '/' });
+    const init = (values) => {
+        setValues({ ...values, name, email })
+        setUserDataChanged(false)
+    }
+    useEffect(() => {
+        dispatch(getUser())
+        init({ name, email })
+    }, [])
+
+    useEffect(() => {
+        setUserDataChanged(name !== values.name || email !== values.email)
+    }, [name, email, values])
+
+    const onSubmit = e => {
+        e.preventDefault()
+        dispatch(setUserData(values))
+    }
+
+    const onCancel = () => {
+        init()
     }
 
     return (
@@ -43,10 +67,14 @@ export function ProfilePage() {
                 <span>В этом разделе вы можете изменить свои персональные данные</span>
             </ul>
             <div className={styles.user_data}>
-                <form className={styles.form}>
-                    <Input onChange={onChange} placeholder='Имя' name='name' value={name || ''}></Input>
-                    <EmailInput onChange={onChange} name='email' value={email || ''}></EmailInput>
-                    <PasswordInput onChange={onChange} name='password' value=''></PasswordInput>
+                <form className={styles.form} onSubmit={onSubmit}>
+                    <Input onChange={handleChange} placeholder='Имя' name='name' value={values.name || ''}></Input>
+                    <EmailInput onChange={handleChange} name='email' value={values.email || ''}></EmailInput>
+                    <PasswordInput readOnly name='password' value=''></PasswordInput>
+                    {userDataChanged && <div className={styles.buttons}>
+                        <Button onClick={onCancel} type="secondary">Отмена</Button>
+                        <Button>Сохранить</Button>
+                    </div>}
                 </form>
             </div>
         </div >

@@ -7,7 +7,7 @@ import { useFormValues } from '../utils/hooks';
 
 export function ForgotPasswordPage() {
 
-    const { values, handleChange } = useFormValues({})
+    const { values, handleChange } = useFormValues({ email: '' })
     const dispatch = useDispatch()
     const history = useHistory()
 

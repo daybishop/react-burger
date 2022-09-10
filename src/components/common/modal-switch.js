@@ -14,6 +14,7 @@ import { clearSelectedItem } from "../../services/slices/ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import IngredientDetails, { IngredientDetailsById } from "../burger-ingredients/ingredient-details";
+import { AnonymousRoute } from "../route/anonymous-route";
 import { ProtectedRoute } from "../route/protected-route";
 import Modal from "./modal";
 
@@ -40,21 +41,21 @@ export const ModalSwitch = () => {
                         <BurgerConstructor />
                     </DndProvider>
                 </Route>
-                <Route path='/login'>
+                <AnonymousRoute path='/login'>
                     <LoginPage />
-                </Route>
+                </AnonymousRoute>
                 <Route path='/logout'>
                     <LogoutPage />
                 </Route>
-                <Route path='/register'>
+                <AnonymousRoute path='/register'>
                     <RegisterPage />
-                </Route>
-                <Route path='/reset-password'>
+                </AnonymousRoute>
+                <AnonymousRoute path='/reset-password'>
                     <ResetPasswordPage />
-                </Route>
-                <Route path='/forgot-password'>
+                </AnonymousRoute>
+                <AnonymousRoute path='/forgot-password'>
                     <ForgotPasswordPage />
-                </Route>
+                </AnonymousRoute>
                 <ProtectedRoute path='/profile'>
                     <ProfilePage />
                 </ProtectedRoute>

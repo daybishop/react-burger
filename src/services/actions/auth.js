@@ -1,27 +1,22 @@
-import { deleteCookie, setCookie } from "../../utils/cookie";
-import { forgotPasswordRequest, getUserRequest, loginRequest, logoutRequest, registerRequest, resetPasswordRequest } from "../api/auth"
-import { loading, resetUser, setIsPasswordReset, setUser } from "../slices/user"
+import { forgotPasswordRequest, getUserRequest, loginRequest, logoutRequest, registerRequest, resetPasswordRequest, setUserRequest } from "../api/auth"
+import { setIsPasswordReset, setUser } from "../slices/user"
 
 export const loginUser = (form) => dispatch => {
-    dispatch(loading())
     loginRequest(form)
         .then(data => {
-            if (data.success) {
-                dispatch(setUser(data.user))
-                setCookie('accessToken', data.accessToken)
-                setCookie('refreshToken', data.refreshToken)
-            }
+            dispatch(setUser(data.user))
         })
-        .catch(reason => console.log(reason))
+        .catch(reason => {
+            dispatch(setUser(null))
+            console.log(reason)
+        })
 }
 
 export const logoutUser = () => dispatch => {
     logoutRequest()
         .then(data => {
             if (data.success) {
-                dispatch(resetUser(data.user))
-                deleteCookie('accessToken')
-                deleteCookie('refreshToken')
+                dispatch(setUser(null))
             }
         })
         .catch(reason => console.log(reason))
@@ -30,11 +25,7 @@ export const logoutUser = () => dispatch => {
 export const register = (form) => dispatch => {
     registerRequest(form)
         .then(data => {
-            if (data.success) {
-                dispatch(setUser(data.user))
-                setCookie('accessToken', data.accessToken)
-                setCookie('refreshToken', data.refreshToken)
-            }
+            dispatch(setUser(data.user))
         })
         .catch(reason => console.log(reason))
 }
@@ -42,9 +33,7 @@ export const register = (form) => dispatch => {
 export const forgotPassword = (form) => dispatch => {
     forgotPasswordRequest(form)
         .then(data => {
-            if (data.success) {
-                dispatch(setIsPasswordReset(true))
-            }
+            dispatch(setIsPasswordReset(true))
         })
         .catch(reason => console.log(reason))
 }
@@ -52,9 +41,7 @@ export const forgotPassword = (form) => dispatch => {
 export const resetPassword = (form) => dispatch => {
     resetPasswordRequest(form)
         .then(data => {
-            if (data.success) {
-                dispatch(setIsPasswordReset(false))
-            }
+            dispatch(setIsPasswordReset(false))
         })
         .catch(reason => console.log(reason))
 }
@@ -62,12 +49,20 @@ export const resetPassword = (form) => dispatch => {
 export const getUser = () => dispatch => {
     getUserRequest()
         .then(data => {
-            if (data && data.success) {
-                dispatch(setUser(data.user))
-            }
+            dispatch(setUser(data.user))
         })
         .catch(reason => {
             console.error(reason)
-            dispatch(resetUser())
+            dispatch(setUser(null))
+        })
+}
+
+export const setUserData = form => dispatch => {
+    setUserRequest(form)
+        .then(data => {
+            dispatch(setUser(data.user))
+        })
+        .catch(reason => {
+            console.error(reason)
         })
 }

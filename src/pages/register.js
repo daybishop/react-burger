@@ -7,7 +7,7 @@ import { useFormValues } from '../utils/hooks';
 
 export function RegisterPage() {
 
-    const { values, handleChange } = useFormValues({})
+    const { values, handleChange } = useFormValues({ name: '', email: '', password: '' })
     const dispatch = useDispatch()
     const history = useHistory()
 

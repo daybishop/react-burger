@@ -1,18 +1,20 @@
 import styles from './register.module.css';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { resetPassword } from '../services/actions/auth';
 import { useFormValues } from '../utils/hooks';
 
 export function ResetPasswordPage() {
 
-    const { values, handleChange } = useFormValues({})
+    const { values, handleChange } = useFormValues({ password: '', token: '' })
+    const history = useHistory()
     const dispatch = useDispatch()
 
     const onSubmit = e => {
         e.preventDefault();
         dispatch(resetPassword(values))
+        history.replace('/')
     }
 
     return (

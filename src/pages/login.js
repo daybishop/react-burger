@@ -11,7 +11,7 @@ export function LoginPage() {
     const { values, handleChange } = useFormValues({ email: '', password: '' })
     const dispatch = useDispatch()
     const history = useHistory()
-    const isActive = useSelector(userSelectors.isActive)
+    const isLoggedOn = useSelector(userSelectors.isLoggedOn)
 
     const onSubmit = e => {
         e.preventDefault()
@@ -19,10 +19,11 @@ export function LoginPage() {
         history.replace(history.location.state?.from || '/')
     }
 
-    if (isActive) return (<Redirect to={history.location.state?.from.pathname || '/'} />)
+    if (isLoggedOn) return (<Redirect to={history.location.state?.from.pathname || '/'} />)
 
     return (
-        <div className={styles.wrapper}>
+        !isLoggedOn &&
+        < div className={styles.wrapper} >
             <form className={styles.form} onSubmit={onSubmit}>
                 <h1 className={styles.heading}>Вход</h1>
                 <Input type='email' onChange={handleChange} placeholder='E-mail' name='email' value={values.email} />
@@ -31,6 +32,6 @@ export function LoginPage() {
                 <span>Вы - новый пользователь? <Link to='/register'>Зарегистрироваться</Link></span>
                 <span>Забыли пароль? <Link to='/forgot-password'>Восстановить пароль</Link></span>
             </form>
-        </div>
+        </div >
     )
 } 
