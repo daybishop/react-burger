@@ -59,14 +59,14 @@ export const ModalSwitch = () => {
                 <ProtectedRoute path='/profile'>
                     <ProfilePage />
                 </ProtectedRoute>
-                <Route path="/ingredients/:id" children={<IngredientDetailsById />} />
+                <Route path="/ingredients/:id" children={<IngredientDetails />} />
                 <Route>
                     <NotFoundPage />
                 </Route>
             </Switch>
             {background && <Route path="/ingredients/:id" children={
                 <Modal show={true} header="Детали ингредиента" handleClose={hideModal}>
-                    <IngredientDetails item={selectedItem} />
+                    <IngredientDetails />
                 </Modal>
             } />
             }

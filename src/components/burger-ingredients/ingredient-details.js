@@ -32,41 +32,29 @@ GBUElement.propTypes = {
     ]).isRequired,
 };
 
-export default function IngredientDetails({ item }) {
+export default function IngredientDetails() {
+
+    const items = useSelector(ingredientsSelectors.items)
+    const { id } = useParams()
+    const item = items.find((item) => item._id === id)
+
     const gbu = [
         "calories",
         "fat",
         "proteins",
         "carbohydrates",
     ]
-    if (item === null) {
-        return null;
-    }
-    return (
-        <div className={styles.content}>
-            <img className={styles.image} src={item.image_large} alt={item.name} />
-            <span className={`text text_type_main-medium ${styles.title}`}>{item.name}</span>
-            <div className={styles.gbu_list}>
-                {gbu.map((el) => <GBUElement key={el} item={item} type={el} />)}
-            </div>
-        </div>
-    )
-}
-
-IngredientDetails.propTypes = {
-    item: ingredientType,
-};
-
-export const IngredientDetailsById = () => {
-    const items = useSelector(ingredientsSelectors.items)
-    const { id } = useParams()
-    const item = items.find((item) => item._id === id)
 
     return (
         item
-            ?
-            <div className={styles.wrapper}>
-                <IngredientDetails item={item} />
+            ? <div className={styles.wrapper}>
+                <div className={styles.content}>
+                    <img className={styles.image} src={item.image_large} alt={item.name} />
+                    <span className={`text text_type_main-medium ${styles.title}`}>{item.name}</span>
+                    <div className={styles.gbu_list}>
+                        {gbu.map((el) => <GBUElement key={el} item={item} type={el} />)}
+                    </div>
+                </div>
             </div>
             : null
     )
