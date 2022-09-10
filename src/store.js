@@ -4,13 +4,10 @@ import logger from 'redux-logger'
 import constructorReducer from './services/slices/constructor'
 import thunk from 'redux-thunk'
 import userReducer from './services/slices/user'
+import { loadState } from './utils/local-storage'
 
 
-const preloadedState = {
-    constructor: {
-        items: []
-    }
-}
+const preloadedState = loadState();
 
 export const store = configureStore({
     middleware: (getDefaultMiddleware) => getDefaultMiddleware(thunk).concat(logger),
