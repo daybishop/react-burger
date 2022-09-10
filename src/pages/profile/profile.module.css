@@ -72,3 +72,8 @@ a:active {
 .form>span:last-child {
     margin-top: 80px;
 }
+
+.buttons {
+    display: flex;
+    gap: 5px;
+}
