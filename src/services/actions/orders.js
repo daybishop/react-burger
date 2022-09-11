@@ -1,31 +1,22 @@
-import { checkResponse } from "../../components/common/api";
-import { ORDERS } from "../../utils/constants";
-import { setOrderNumber, showOrder } from "../slices/constructor";
+import { setOrderNumber, setOrderRequested, showOrder } from "../slices/constructor";
 import PropTypes from 'prop-types';
+import { saveOrderRequest } from "../api/orders";
 
 export const getOrderNumber = (items) => dispatch => {
-    fetch(ORDERS, {
-        method: "post",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            ingredients: items
-        })
-    })
-        .then(checkResponse)
+    dispatch(setOrderRequested(true))
+    dispatch(showOrder())
+    saveOrderRequest(items)
         .then(data => {
-            if (data.success) {
-                dispatch(setOrderNumber(data.order.number))
-                dispatch(showOrder())
-            } else throw new Error("Error data loading");
+            dispatch(setOrderNumber(data.order.number))
         })
         .catch(e => {
             console.log(e)
         })
-};
+        .finally(() => {
+            dispatch(setOrderRequested(false))
+        })
+}
 
 getOrderNumber.propTypes = {
     items: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
+}

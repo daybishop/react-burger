@@ -41,7 +41,7 @@ const setTokens = data => {
     }
 }
 
-const getAccessToken = () => {
+export const getAccessToken = () => {
     let accessToken = getCookie('accessToken')
     if (!accessToken) return null
     const accessTokenData = JSON.parse(window.atob(accessToken.split('.')[1]))

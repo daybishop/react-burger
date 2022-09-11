@@ -11,6 +11,7 @@ import { RegisterPage } from "../../pages/register";
 import { ResetPasswordPage } from "../../pages/reset-password";
 import { clearSelectedItem } from "../../services/slices/ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
+import OrderDetails from "../burger-constructor/order-details";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import IngredientDetails from "../burger-ingredients/ingredient-details";
 import { AnonymousRoute } from "../route/anonymous-route";
@@ -62,11 +63,17 @@ export const ModalSwitch = () => {
                     <NotFoundPage />
                 </Route>
             </Switch>
-            {background && <Route path="/ingredients/:id" children={
-                <Modal show={true} header="Детали ингредиента" handleClose={hideModal}>
-                    <IngredientDetails />
-                </Modal>
-            } />
+            {background &&
+                <>
+                    <Route path="/ingredients/:id" children={
+                        <Modal show={true} header="Детали ингредиента" handleClose={hideModal}>
+                            <IngredientDetails />
+                        </Modal>
+                    } />
+                    <ProtectedRoute path="/" children={
+                        <OrderDetails />
+                    } />
+                </>
             }
         </>
     )
