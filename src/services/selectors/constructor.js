@@ -1,5 +1,15 @@
-export const items = state => state.constructor.items
-export const bun = state => state.constructor.bun
-export const totalPrice = state => state.constructor.totalPrice
-export const orderNumber = state => state.constructor.orderNumber
-export const showOrderModal = state => state.constructor.showOrderModal
+const items = state => state.constructor.items
+const bun = state => state.constructor.bun
+const totalPrice = state => state.constructor.totalPrice
+const orderNumber = state => state.constructor.orderNumber
+const showOrderModal = state => state.constructor.showOrderModal
+const isOrderRequested = state => state.constructor.isOrderRequested
+
+export const constructorSelectors = {
+    items,
+    bun,
+    totalPrice,
+    orderNumber,
+    showOrderModal,
+    isOrderRequested,
+}
