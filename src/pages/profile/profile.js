@@ -70,7 +70,7 @@ export function ProfilePage() {
                 <form className={styles.form} onSubmit={onSubmit}>
                     <Input onChange={handleChange} placeholder='Имя' name='name' value={values.name || ''}></Input>
                     <EmailInput onChange={handleChange} name='email' value={values.email || ''}></EmailInput>
-                    <PasswordInput readOnly name='password' value=''></PasswordInput>
+                    <PasswordInput onChange={e => { }} name='password' value=''></PasswordInput>
                     {userDataChanged && <div className={styles.buttons}>
                         <Button onClick={onCancel} type="secondary">Отмена</Button>
                         <Button>Сохранить</Button>
