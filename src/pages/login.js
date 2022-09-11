@@ -1,28 +1,27 @@
 import styles from './register.module.css';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, Redirect, useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { loginUser } from '../services/actions/auth';
 import { useFormValues } from '../utils/hooks';
-import { userSelectors } from '../services/selectors/user';
+import { setIsPasswordReset } from '../services/slices/user';
+import { useEffect } from 'react'
 
 export function LoginPage() {
 
     const { values, handleChange } = useFormValues({ email: '', password: '' })
     const dispatch = useDispatch()
-    const history = useHistory()
-    const isLoggedOn = useSelector(userSelectors.isLoggedOn)
+
+    useEffect(() => {
+        dispatch(setIsPasswordReset(false))
+    }, [])
 
     const onSubmit = e => {
         e.preventDefault()
         dispatch(loginUser(values))
-        history.replace(history.location.state?.from || '/')
     }
 
-    if (isLoggedOn) return (<Redirect to={history.location.state?.from.pathname || '/'} />)
-
     return (
-        !isLoggedOn &&
         < div className={styles.wrapper} >
             <form className={styles.form} onSubmit={onSubmit}>
                 <h1 className={styles.heading}>Вход</h1>
