@@ -25,6 +25,10 @@ export const init = {
     referrerPolicy: 'no-referrer',
 }
 
+export const doRequest = async (url, init) => {
+    return await fetch(url, init).then(checkResponse)
+}
+
 export const fetchWithToken = async (url, init) => {
     const accessToken = getAccessToken()
     if (!accessToken) return new Promise.reject('Access Token not found');

@@ -1,6 +1,7 @@
 import { checkResponse } from "../../components/common/api";
 import { API } from "../../utils/constants";
 import { deleteCookie, getCookie, setCookie } from "../../utils/cookie";
+import { doRequest } from "./common";
 
 // POST https://norma.nomoreparties.space/api/auth/login - эндпоинт для авторизации.
 // POST https://norma.nomoreparties.space/api/auth/register - эндпоинт для регистрации пользователя.
@@ -61,18 +62,17 @@ export const getAccessToken = () => {
 const fetchWithToken = async (url, init) => {
     const accessToken = getAccessToken()
     if (!accessToken) return new Promise.reject('Access Token not found');
-    return await fetch(url, {
+    return await doRequest(url, {
         ...init,
         headers: { ...init.headers, authorization: `Bearer ${accessToken}` },
     })
 }
 
 export const loginRequest = async form => {
-    return await fetch(LOGIN, {
+    return await doRequest(LOGIN, {
         ...init,
         body: JSON.stringify(form),
     })
-        .then(checkResponse)
         .then(data => {
             setTokens(data)
             return Promise.resolve(data)
@@ -80,11 +80,10 @@ export const loginRequest = async form => {
 }
 
 export const logoutRequest = async () => {
-    return fetch(LOGOUT, {
+    return doRequest(LOGOUT, {
         ...init,
         body: JSON.stringify({ 'token': `${getCookie('refreshToken')}` }),
     })
-        .then(checkResponse)
         .then(data => {
             setTokens(null)
             return Promise.resolve(data)
@@ -92,11 +91,10 @@ export const logoutRequest = async () => {
 }
 
 export const registerRequest = async form => {
-    return await fetch(REGISTER, {
+    return await doRequest(REGISTER, {
         ...init,
         body: JSON.stringify(form),
     })
-        .then(checkResponse)
         .then(data => {
             setTokens(data)
             return Promise.resolve(data)
@@ -104,19 +102,17 @@ export const registerRequest = async form => {
 }
 
 export const forgotPasswordRequest = async form => {
-    return await fetch(PASSWORD_FORGOT, {
+    return await doRequest(PASSWORD_FORGOT, {
         ...init,
         body: JSON.stringify(form),
     })
-        .then(checkResponse)
 }
 
 export const resetPasswordRequest = async form => {
-    return await fetch(PASSWORD_RESET, {
+    return await doRequest(PASSWORD_RESET, {
         ...init,
         body: JSON.stringify(form),
     })
-        .then(checkResponse)
 }
 
 export const getUserRequest = async () => {
@@ -124,7 +120,6 @@ export const getUserRequest = async () => {
         ...init,
         method: 'GET',
     })
-        .then(checkResponse)
 }
 
 export const setUserRequest = async form => {
@@ -137,11 +132,10 @@ export const setUserRequest = async form => {
 }
 
 export const refreshTokenRequest = async () => {
-    return await fetch(TOKEN, {
+    return await doRequest(TOKEN, {
         ...init,
         body: JSON.stringify({ 'token': `${getCookie('refreshToken')}` }),
     })
-        .then(checkResponse)
         .then(data => {
             setTokens(data)
         })
