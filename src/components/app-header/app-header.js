@@ -38,7 +38,9 @@ export default function AppHeader() {
                     </HeaderLink>
                 </div>
                 <div className={styles.logo}>
-                    <Logo />
+                    <NavLink to='/'>
+                        <Logo />
+                    </NavLink>
                 </div>
                 <div className={styles.profile}>
                     <HeaderLink title="Личный кабинет" to='/profile' >
