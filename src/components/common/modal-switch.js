@@ -1,6 +1,6 @@
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { NotFoundPage } from "../../pages/404";
 import { ForgotPasswordPage } from "../../pages/forgot-password";
@@ -9,11 +9,10 @@ import { LogoutPage } from "../../pages/logout";
 import { ProfilePage } from "../../pages/profile/profile";
 import { RegisterPage } from "../../pages/register";
 import { ResetPasswordPage } from "../../pages/reset-password";
-import { ingredientsSelectors } from "../../services/selectors/ingredients";
 import { clearSelectedItem } from "../../services/slices/ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import IngredientDetails, { IngredientDetailsById } from "../burger-ingredients/ingredient-details";
+import IngredientDetails from "../burger-ingredients/ingredient-details";
 import { AnonymousRoute } from "../route/anonymous-route";
 import { ProtectedRoute } from "../route/protected-route";
 import Modal from "./modal";
@@ -22,7 +21,6 @@ export const ModalSwitch = () => {
 
     const location = useLocation()
     const history = useHistory()
-    const selectedItem = useSelector(ingredientsSelectors.selectedItem)
 
     const background = location && location.state && location.state.background;
 

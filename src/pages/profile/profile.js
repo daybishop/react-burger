@@ -23,7 +23,7 @@ export function ProfilePage() {
     useEffect(() => {
         dispatch(getUser())
         init({ name, email })
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         setUserDataChanged(name !== values.name || email !== values.email)
