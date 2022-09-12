@@ -6,10 +6,13 @@ import PropTypes from 'prop-types';
 import { ingredientType } from '../../utils/types'
 import styles from './burger-constructor.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { backup, deleteBun, deleteItem, moveItem, restore, showOrder } from '../../services/slices/constructor';
+import { backup, deleteBun, deleteItem, hideOrder, moveItem, restore, showOrder } from '../../services/slices/constructor';
 import { useDrag, useDrop } from 'react-dnd';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { constructorSelectors } from '../../services/selectors/constructor';
+import OrderDetails from './order-details';
+import { userSelectors } from '../../services/selectors/user';
+import { useEffect } from 'react'
 
 const TotalPrice = () => {
 
@@ -27,19 +30,20 @@ const TotalPrice = () => {
 
 const OrderButton = () => {
 
-    let location = useLocation()
     const dispatch = useDispatch()
+    const isLoggedOn = useSelector(userSelectors.isLoggedOn)
+    const bun = useSelector(constructorSelectors.bun)
+    const items = useSelector(constructorSelectors.items)
 
     const onClick = () => {
-        dispatch(showOrder())
+        if (bun && items.length > 0) dispatch(showOrder())
     }
 
     return (
         <Link
             key='key'
             to={{
-                pathname: '/',
-                state: { background: location }
+                pathname: isLoggedOn ? '/' : '/login',
             }}
         >
             <Button type="primary" size="large" onClick={onClick}>
@@ -168,11 +172,20 @@ export default function BurgerConstructor() {
     const burgerIngredients = useSelector(constructorSelectors.items)
     const bun = useSelector(constructorSelectors.bun)
 
+    const isLoggedOn = useSelector(userSelectors.isLoggedOn)
+    const showOrderModal = useSelector(constructorSelectors.showOrderModal)
+
+    const history = useHistory()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (history.action === 'PUSH') dispatch(hideOrder())
+    }, [])
+
     const [, dropRef] = useDrop(() => ({
         accept: 'ingredient',
     }))
 
-    const dispatch = useDispatch()
     const handleMove = (dragIndex, hoverIndex) => {
         dispatch(moveItem({ dragIndex, hoverIndex }))
     }
@@ -211,6 +224,9 @@ export default function BurgerConstructor() {
                 <TotalPrice />
                 <OrderButton />
             </div>
+            {showOrderModal && isLoggedOn &&
+                <OrderDetails />
+            }
         </section>
     );
 }
