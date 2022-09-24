@@ -1,4 +1,7 @@
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { ingredientsSelectors } from '../../services/selectors/ingredients';
 import { ingredientType } from '../../utils/types'
 import styles from './ingredient-details.module.css';
 
@@ -29,27 +32,30 @@ GBUElement.propTypes = {
     ]).isRequired,
 };
 
-export default function IngredientDetails({ item }) {
+export default function IngredientDetails() {
+
+    const items = useSelector(ingredientsSelectors.items)
+    const { id } = useParams()
+    const item = items.find((item) => item._id === id)
+
     const gbu = [
         "calories",
         "fat",
         "proteins",
         "carbohydrates",
     ]
-    if (item === null) {
-        return null;
-    }
+
     return (
-        <div className={styles.content}>
-            <img className={styles.image} src={item.image_large} alt={item.name} />
-            <span className={`text text_type_main-medium ${styles.title}`}>{item.name}</span>
-            <div className={styles.gbu_list}>
-                {gbu.map((el) => <GBUElement key={el} item={item} type={el} />)}
+        item
+            ? <div className={styles.wrapper}>
+                <div className={styles.content}>
+                    <img className={styles.image} src={item.image_large} alt={item.name} />
+                    <span className={`text text_type_main-medium ${styles.title}`}>{item.name}</span>
+                    <div className={styles.gbu_list}>
+                        {gbu.map((el) => <GBUElement key={el} item={item} type={el} />)}
+                    </div>
+                </div>
             </div>
-        </div>
+            : null
     )
 }
-
-IngredientDetails.propTypes = {
-    item: ingredientType,
-};

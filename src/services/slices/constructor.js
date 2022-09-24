@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid';
 
-const initialState = {
+export const initialState = {
     items: [],
     backupItems: [],
     bun: null,
     totalPrice: 0,
     orderNumber: null,
     showOrderModal: false,
+    isOrderRequested: false,
 }
 
 const calculateTotalPrice = state => (state.bun ? 2 * state.bun.price : 0) + state.items.reduce((prev, item) => prev + item.price, 0)
@@ -36,6 +37,7 @@ export const constructorSlice = createSlice({
             state.bun = null
             state.items = []
             state.totalPrice = calculateTotalPrice(state)
+            state.orderNumber = null
         },
         setOrderNumber: (state, action) => {
             state.orderNumber = action.payload
@@ -60,9 +62,12 @@ export const constructorSlice = createSlice({
         hideOrder: (state) => {
             state.showOrderModal = false
         },
+        setOrderRequested: (state, action) => {
+            state.isOrderRequested = action.payload
+        },
     },
 })
 
-export const { addItem, deleteItem, addBun, deleteBun, clearOrderData, setOrderNumber, moveItem, backup, restore, showOrder, hideOrder } = constructorSlice.actions
+export const { addItem, deleteItem, addBun, deleteBun, clearOrderData, setOrderNumber, moveItem, backup, restore, showOrder, hideOrder, setOrderRequested } = constructorSlice.actions
 
 export default constructorSlice.reducer

@@ -1,19 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import PropTypes from 'prop-types';
-import Modal from '../common/modal'
 import { ingredientType } from '../../utils/types'
-import IngredientDetails from './ingredient-details'
 import { useDispatch, useSelector } from 'react-redux';
-import * as ingredientsSelectors from '../../services/selectors/ingredients';
-import { clearSelectedItem, selectItem, setCurrentTab } from '../../services/slices/ingredients';
+import { setCurrentTab } from '../../services/slices/ingredients';
 import { useDrag } from 'react-dnd';
 import { addItem, addBun } from '../../services/slices/constructor';
-import * as constructorSelectors from '../../services/selectors/constructor';
-import { fetchIngredients } from '../../services/actions/ingredients';
+import { Link, useLocation } from 'react-router-dom';
+import { constructorSelectors } from '../../services/selectors/constructor';
+import { ingredientsSelectors } from '../../services/selectors/ingredients';
 
 const Tabs = ({ handleTabClick, refProp }) => {
 
@@ -54,8 +52,10 @@ Tabs.propTypes = {
     ]),
 };
 
-const Ingredient = ({ item, handleClick }) => {
+const Ingredient = ({ item }) => {
 
+    let location = useLocation()
+    const id = item['_id']
     const dispatch = useDispatch()
     const burgerIngredients = useSelector(constructorSelectors.items)
     const bun = useSelector(constructorSelectors.bun)
@@ -85,8 +85,15 @@ const Ingredient = ({ item, handleClick }) => {
         []
     )
     return (
-        <>
-            <li className={styles.item} onClick={e => handleClick(item)} ref={dragRef} style={{ opacity }}>
+        <li className={styles.item} ref={dragRef} style={{ opacity }}>
+            <Link
+                className={styles.link}
+                key={id}
+                to={{
+                    pathname: `/ingredients/${id}`,
+                    state: { background: location }
+                }}
+            >
                 {count > 0 && <Counter className={styles.counter} count={count} />}
                 <img className={styles.item_img} src={item.image} alt={item.name} />
                 <span className={`text text_type_digits-default ${styles.item_price}`}>
@@ -94,17 +101,16 @@ const Ingredient = ({ item, handleClick }) => {
                     <CurrencyIcon />
                 </span>
                 <span className={`text text_type_main-default ${styles.item_title}`}>{item.name}</span>
-            </li>
-        </>
+            </Link>
+        </li >
     )
 }
 
 Ingredient.propTypes = {
     item: ingredientType.isRequired,
-    handleClick: PropTypes.func.isRequired,
 };
 
-const IngredientsSection = ({ type, handleClick, refProp }) => {
+const IngredientsSection = ({ type, refProp }) => {
 
     const ingredientsData = useSelector(ingredientsSelectors.items)
 
@@ -129,7 +135,7 @@ const IngredientsSection = ({ type, handleClick, refProp }) => {
                 {
                     ingredients.map(item => {
                         return (
-                            <Ingredient key={item._id} item={item} handleClick={handleClick} />
+                            <Ingredient key={item._id} item={item} />
                         )
                     })
                 }
@@ -140,7 +146,6 @@ const IngredientsSection = ({ type, handleClick, refProp }) => {
 
 IngredientsSection.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
-    handleClick: PropTypes.func.isRequired,
     refProp: PropTypes.oneOfType([
         PropTypes.func,
         PropTypes.shape({ current: PropTypes.instanceOf(Element) })
@@ -149,24 +154,9 @@ IngredientsSection.propTypes = {
 
 export default function BurgerIngredients() {
 
-    const [showModal, setShowModal] = useState(false);
-    const selectedItem = useSelector(ingredientsSelectors.selectedItem)
     const currentTab = useSelector(ingredientsSelectors.currentTab)
 
     const dispatch = useDispatch()
-
-    useEffect(() => {
-        dispatch(fetchIngredients());
-    }, [dispatch]);
-
-    const onShowModal = (item) => {
-        setShowModal(true);
-        dispatch(selectItem(item))
-    }
-    const hideModal = () => {
-        setShowModal(false);
-        dispatch(clearSelectedItem())
-    }
 
     const onTabClick = (e) => {
         document.getElementById(`ingredient_section_${e}`).scrollIntoView({ block: "start", behavior: "smooth" })
@@ -203,12 +193,9 @@ export default function BurgerIngredients() {
             <Tabs handleTabClick={onTabClick} refProp={refTabs} />
             <div className={styles.scroll_box} onScroll={handleScroll}>
                 {
-                    sections.map(el => <IngredientsSection key={el} type={el} handleClick={onShowModal} refProp={sectionRefs[el]} />)
+                    sections.map(el => <IngredientsSection key={el} type={el} refProp={sectionRefs[el]} />)
                 }
             </div>
-            <Modal show={showModal} header="Детали ингредиента" handleClose={hideModal}>
-                <IngredientDetails item={selectedItem} />
-            </Modal>
         </section>
     );
 

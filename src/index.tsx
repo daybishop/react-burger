@@ -5,6 +5,14 @@ import App from './components/app/app';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store'
 import { Provider } from 'react-redux'
+import { saveState } from './utils/local-storage';
+
+store.subscribe(() => {
+  saveState({
+    user: store.getState().user,
+    constructor: store.getState().constructor,
+  })
+})
 
 ReactDOM.render(
   <Provider store={store}>

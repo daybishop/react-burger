@@ -3,15 +3,16 @@ import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-comp
 import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import Modal from '../common/modal'
 import { ingredientType } from '../../utils/types'
 import styles from './burger-constructor.module.css';
-import OrderDetails from './order-details'
 import { useDispatch, useSelector } from 'react-redux';
-import { backup, clearOrderData, deleteBun, deleteItem, hideOrder, moveItem, restore } from '../../services/slices/constructor';
-import * as constructorSelectors from '../../services/selectors/constructor'
+import { backup, deleteBun, deleteItem, hideOrder, moveItem, restore, showOrder } from '../../services/slices/constructor';
 import { useDrag, useDrop } from 'react-dnd';
-import { getOrderNumber } from '../../services/actions/orders';
+import { Link, useHistory } from 'react-router-dom';
+import { constructorSelectors } from '../../services/selectors/constructor';
+import OrderDetails from './order-details';
+import { userSelectors } from '../../services/selectors/user';
+import { useEffect } from 'react'
 
 const TotalPrice = () => {
 
@@ -29,24 +30,26 @@ const TotalPrice = () => {
 
 const OrderButton = () => {
 
-    const burgerIngredients = useSelector(constructorSelectors.items)
-    const bun = useSelector(constructorSelectors.bun)
-
     const dispatch = useDispatch()
+    const isLoggedOn = useSelector(userSelectors.isLoggedOn)
+    const bun = useSelector(constructorSelectors.bun)
+    const items = useSelector(constructorSelectors.items)
 
     const onClick = () => {
-        const order_ids = bun
-            ? [bun._id, ...burgerIngredients.map(item => item._id), bun._id]
-            : []
-        if (burgerIngredients.length) {
-            dispatch(getOrderNumber(order_ids))
-        }
+        if (bun && items.length > 0) dispatch(showOrder())
     }
 
     return (
-        <Button type="primary" size="large" onClick={onClick}>
-            Оформить заказ
-        </Button>
+        <Link
+            key='key'
+            to={{
+                pathname: isLoggedOn ? '/' : '/login',
+            }}
+        >
+            <Button type="primary" size="large" onClick={onClick}>
+                Оформить заказ
+            </Button>
+        </Link>
     )
 }
 
@@ -167,19 +170,22 @@ BurgerElement.propTypes = {
 export default function BurgerConstructor() {
 
     const burgerIngredients = useSelector(constructorSelectors.items)
-    const orderNumber = useSelector(constructorSelectors.orderNumber)
     const bun = useSelector(constructorSelectors.bun)
+
+    const isLoggedOn = useSelector(userSelectors.isLoggedOn)
+    const showOrderModal = useSelector(constructorSelectors.showOrderModal)
+
+    const history = useHistory()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (history.action === 'PUSH') dispatch(hideOrder())
+    }, [])
 
     const [, dropRef] = useDrop(() => ({
         accept: 'ingredient',
     }))
 
-    const dispatch = useDispatch()
-    const showOrderModal = useSelector(constructorSelectors.showOrderModal)
-    const hideModal = () => {
-        dispatch(hideOrder())
-        dispatch(clearOrderData())
-    }
     const handleMove = (dragIndex, hoverIndex) => {
         dispatch(moveItem({ dragIndex, hoverIndex }))
     }
@@ -218,10 +224,9 @@ export default function BurgerConstructor() {
                 <TotalPrice />
                 <OrderButton />
             </div>
-
-            <Modal show={showOrderModal} handleClose={hideModal}>
-                <OrderDetails id={String(orderNumber)} />
-            </Modal>
+            {showOrderModal && isLoggedOn &&
+                <OrderDetails />
+            }
         </section>
     );
 }
