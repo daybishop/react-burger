@@ -1,11 +1,16 @@
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { ingredientsSelectors } from '../../services/selectors/ingredients';
-import { ingredientType } from '../../utils/types'
+import { TIngredient } from '../../utils/types'
 import styles from './ingredient-details.module.css';
 
-const GBUElement = ({ item, type }) => {
+type GBUTypes = "calories" | "fat" | "proteins" | "carbohydrates"
+type TGBUElement = {
+    item: TIngredient
+    type: GBUTypes
+}
+
+const GBUElement = ({ item, type }: TGBUElement) => {
 
     const gbu = {
         "calories": (<><span>Калории,</span><span>ккал</span></>),
@@ -22,23 +27,17 @@ const GBUElement = ({ item, type }) => {
     )
 }
 
-GBUElement.propTypes = {
-    item: ingredientType.isRequired,
-    type: PropTypes.oneOf([
-        "calories",
-        "fat",
-        "proteins",
-        "carbohydrates",
-    ]).isRequired,
-};
+interface IIngredientDetailsParams {
+    id: string
+}
 
 export default function IngredientDetails() {
 
     const items = useSelector(ingredientsSelectors.items)
-    const { id } = useParams()
-    const item = items.find((item) => item._id === id)
+    const { id } = useParams<IIngredientDetailsParams>()
+    const item = items.find((item: TIngredient) => item._id === id)
 
-    const gbu = [
+    const gbu: Array<GBUTypes> = [
         "calories",
         "fat",
         "proteins",

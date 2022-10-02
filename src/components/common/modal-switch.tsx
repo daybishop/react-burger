@@ -17,9 +17,13 @@ import { AnonymousRoute } from "../route/anonymous-route";
 import { ProtectedRoute } from "../route/protected-route";
 import Modal from "./modal";
 
+interface IState {
+    background: any
+}
+
 export const ModalSwitch = () => {
 
-    const location = useLocation()
+    const location = useLocation<IState>()
     const history = useHistory()
 
     const background = location && location.state && location.state.background;
@@ -39,28 +43,14 @@ export const ModalSwitch = () => {
                         <BurgerConstructor />
                     </DndProvider>
                 </Route>
-                <AnonymousRoute path='/login'>
-                    <LoginPage />
-                </AnonymousRoute>
-                <Route path='/logout'>
-                    <LogoutPage />
-                </Route>
-                <AnonymousRoute path='/register'>
-                    <RegisterPage />
-                </AnonymousRoute>
-                <AnonymousRoute path='/reset-password'>
-                    <ResetPasswordPage />
-                </AnonymousRoute>
-                <AnonymousRoute path='/forgot-password'>
-                    <ForgotPasswordPage />
-                </AnonymousRoute>
-                <ProtectedRoute path='/profile'>
-                    <ProfilePage />
-                </ProtectedRoute>
-                <Route path="/ingredients/:id" children={<IngredientDetails />} />
-                <Route>
-                    <NotFoundPage />
-                </Route>
+                <Route path='/logout' component={LogoutPage} />
+                <AnonymousRoute path='/login' component={LoginPage} />
+                <AnonymousRoute path='/register' component={RegisterPage} />
+                <AnonymousRoute path='/reset-password' component={ResetPasswordPage} />
+                <AnonymousRoute path='/forgot-password' component={ForgotPasswordPage} />
+                <ProtectedRoute path='/profile' component={ProfilePage} />
+                <Route path="/ingredients/:id" component={IngredientDetails} />
+                <Route component={NotFoundPage} />
             </Switch>
             {background &&
                 <Route path="/ingredients/:id" children={

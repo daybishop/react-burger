@@ -1,10 +1,14 @@
-import { Logo } from '@ya.praktikum/react-developer-burger-ui-components';
-import { BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import styles from './app-header.module.css';
-import PropTypes from 'prop-types';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { Logo } from '@ya.praktikum/react-developer-burger-ui-components'
+import { BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import styles from './app-header.module.css'
+import { NavLink, useRouteMatch } from 'react-router-dom'
+import { FC } from 'react'
 
-const HeaderLink = ({ children, title, to }) => {
+interface IHeaderLink {
+    title: string
+    to: string
+}
+const HeaderLink: FC<IHeaderLink> = ({ children, title, to }) => {
     return (
         <div className={styles.link_wrapper}>
             {children}
@@ -18,11 +22,6 @@ const HeaderLink = ({ children, title, to }) => {
         </div>
     );
 }
-
-HeaderLink.propTypes = {
-    title: PropTypes.string.isRequired,
-    to: PropTypes.string.isRequired,
-};
 
 export default function AppHeader() {
 
@@ -53,5 +52,5 @@ export default function AppHeader() {
                 </div>
             </nav>
         </header >
-    );
+    )
 }

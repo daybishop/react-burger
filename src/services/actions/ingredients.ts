@@ -1,14 +1,13 @@
-import { checkResponse } from "../../components/common/api";
-import { INGREDIENTS } from "../../utils/constants";
 import { hasError, ingredientsSlice } from "../slices/ingredients";
+import { Dispatch } from "redux";
+import { fetchIngredientsData } from "../api/ingredients";
 
 const { startLoading, loadingSuccess } = ingredientsSlice.actions;
 
-export const fetchIngredients = () => dispatch => {
-
+export const fetchIngredients = () => (dispatch: Dispatch) => {
     dispatch(startLoading())
-    fetch(INGREDIENTS)
-        .then(checkResponse)
+
+    fetchIngredientsData()
         .then(data => {
             dispatch(loadingSuccess(data.data))
         })

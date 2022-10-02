@@ -3,15 +3,21 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './modal.module.css';
 import { useEffect } from "react";
 import ModalOverlay from "./modal-overlay";
-import PropTypes from 'prop-types';
+import { FC } from 'react'
 
 
 const modalRoot = document.getElementById("modal-root");
 
-export default function Modal({ show, children, header, handleClose }) {
+interface IModal {
+    show: boolean
+    header?: string
+    handleClose: () => void
+}
+
+const Modal: FC<IModal> = ({ show, children, header, handleClose }) => {
 
     useEffect(() => {
-        const closeOnEscapeKeyDown = (e) => {
+        const closeOnEscapeKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
                 handleClose();
             }
@@ -34,19 +40,14 @@ export default function Modal({ show, children, header, handleClose }) {
                 <section className={styles.main} onClick={e => e.stopPropagation()}>
                     <div className={`text text_type_main-large pt-10 pb-6 ${styles.title}`}>
                         <span>{header}</span>
-                        <CloseIcon onClick={handleClose} />
+                        <CloseIcon type='primary' onClick={handleClose} />
                     </div>
                     {children}
                 </section>
             </ModalOverlay >
         ),
-        modalRoot
+        modalRoot!
     );
 }
 
-Modal.propTypes = {
-    show: PropTypes.bool,
-    children: PropTypes.node.isRequired,
-    header: PropTypes.string,
-    handleClose: PropTypes.func.isRequired,
-};
+export default Modal

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { forgotPassword } from '../services/actions/auth';
 import { useFormValues } from '../utils/hooks';
 import { userSelectors } from '../services/selectors/user';
+import { FormEvent } from 'react';
 
 
 export function ForgotPasswordPage() {
@@ -13,9 +14,9 @@ export function ForgotPasswordPage() {
     const { values, handleChange } = useFormValues({ email: '' })
     const dispatch = useDispatch()
 
-    const onSubmit = e => {
+    const onSubmit = (e: FormEvent) => {
         e.preventDefault();
-        dispatch(forgotPassword(values))
+        dispatch<any>(forgotPassword(values))
     }
 
     if (isPasswordReset) return <Redirect to='/reset-password' />
