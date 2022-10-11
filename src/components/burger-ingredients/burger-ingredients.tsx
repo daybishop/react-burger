@@ -1,10 +1,9 @@
-import { useRef } from 'react';
+import React, { FC, useRef } from 'react';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
-import PropTypes from 'prop-types';
-import { ingredientType } from '../../utils/types'
+import { TIngredient } from '../../utils/types'
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentTab } from '../../services/slices/ingredients';
 import { useDrag } from 'react-dnd';
@@ -13,29 +12,35 @@ import { Link, useLocation } from 'react-router-dom';
 import { constructorSelectors } from '../../services/selectors/constructor';
 import { ingredientsSelectors } from '../../services/selectors/ingredients';
 
-const Tabs = ({ handleTabClick, refProp }) => {
+type TTabClickHandle = (e: string) => void
+interface ITabs {
+    handleTabClick: TTabClickHandle
+    refProp: React.LegacyRef<HTMLDivElement>
+}
+type TSections = 'bun' | 'sauce' | 'main'
+const tabNames: { [key in TSections]: string } = {
+    bun: 'Булки',
+    sauce: 'Соусы',
+    main: 'Начинка',
+}
+
+const Tabs: FC<ITabs> = ({ handleTabClick, refProp }) => {
 
     const currentTab = useSelector(ingredientsSelectors.currentTab)
     const dispatch = useDispatch()
 
-    const onClick = (e) => {
+    const onClick = (e: string) => {
         dispatch(setCurrentTab(e))
         handleTabClick(e)
-    }
-
-    const tabs = {
-        bun: 'Булки',
-        sauce: 'Соусы',
-        main: 'Начинки',
     }
 
     return (
         <div className={styles.tabs} ref={refProp}>
             {
-                Object.keys(tabs).map(key => {
+                Object.keys(tabNames).map((key) => {
                     return (
                         < Tab key={key} value={key} active={currentTab === key} onClick={onClick} >
-                            {tabs[key]}
+                            {tabNames[key as TSections]}
                         </Tab>
                     )
                 })
@@ -44,27 +49,23 @@ const Tabs = ({ handleTabClick, refProp }) => {
     )
 }
 
-Tabs.propTypes = {
-    handleTabClick: PropTypes.func.isRequired,
-    refProp: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.shape({ current: PropTypes.instanceOf(Element) })
-    ]),
-};
+interface IIngredient {
+    item: TIngredient
+}
 
-const Ingredient = ({ item }) => {
+const Ingredient: FC<IIngredient> = ({ item }) => {
 
     let location = useLocation()
     const id = item['_id']
     const dispatch = useDispatch()
     const burgerIngredients = useSelector(constructorSelectors.items)
     const bun = useSelector(constructorSelectors.bun)
-    const count =
+    const count: number =
         item.type === 'bun'
             ? item._id === bun?._id
                 ? 2
                 : 0
-            : burgerIngredients.reduce((prev, burgerItem) => {
+            : burgerIngredients.reduce((prev: number, burgerItem: TIngredient) => {
                 return prev + (item._id === burgerItem._id ? 1 : 0)
             }, 0)
 
@@ -94,11 +95,11 @@ const Ingredient = ({ item }) => {
                     state: { background: location }
                 }}
             >
-                {count > 0 && <Counter className={styles.counter} count={count} />}
+                {count > 0 && <Counter count={count} />}
                 <img className={styles.item_img} src={item.image} alt={item.name} />
                 <span className={`text text_type_digits-default ${styles.item_price}`}>
                     {item.price}
-                    <CurrencyIcon />
+                    <CurrencyIcon type='primary' />
                 </span>
                 <span className={`text text_type_main-default ${styles.item_title}`}>{item.name}</span>
             </Link>
@@ -106,19 +107,15 @@ const Ingredient = ({ item }) => {
     )
 }
 
-Ingredient.propTypes = {
-    item: ingredientType.isRequired,
-};
+interface IIngredientSection {
+    type: TSections
+    refProp: React.RefObject<HTMLElement>
+}
 
-const IngredientsSection = ({ type, refProp }) => {
+const IngredientsSection: FC<IIngredientSection> = ({ type, refProp }) => {
 
-    const ingredientsData = useSelector(ingredientsSelectors.items)
+    const ingredientsData: Array<TIngredient> = useSelector(ingredientsSelectors.items)
 
-    const types = {
-        main: "Начинка",
-        sauce: "Соусы",
-        bun: "Булки"
-    }
     const ingredients = ingredientsData.filter(item => {
         return item['type'] === type;
     });
@@ -127,7 +124,7 @@ const IngredientsSection = ({ type, refProp }) => {
         <section className={styles.section} ref={refProp}>
             {/* Заголовок списка определённого типа */}
             < p id={`ingredient_section_${type}`} className={`text text_type_main-medium pt-10 pb-6 ${styles.section_title}`}>
-                {types[type]}
+                {tabNames[type]}
             </p >
 
             {/* Список ингредиентов */}
@@ -144,30 +141,25 @@ const IngredientsSection = ({ type, refProp }) => {
     )
 }
 
-IngredientsSection.propTypes = {
-    type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
-    refProp: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.shape({ current: PropTypes.instanceOf(Element) })
-    ]),
-};
-
 export default function BurgerIngredients() {
 
     const currentTab = useSelector(ingredientsSelectors.currentTab)
 
     const dispatch = useDispatch()
 
-    const onTabClick = (e) => {
-        document.getElementById(`ingredient_section_${e}`).scrollIntoView({ block: "start", behavior: "smooth" })
+    const onTabClick: TTabClickHandle = (e) => {
+        document.getElementById(`ingredient_section_${e}`)?.scrollIntoView({ block: "start", behavior: "smooth" })
     }
 
+    interface ISectionDistance {
+        [key: string]: number
+    }
 
     const handleScroll = () => {
-        const tabsY = refTabs.current.getBoundingClientRect().y
-        let sectionDistance = {}
+        const tabsY = refTabs.current?.getBoundingClientRect().y!
+        let sectionDistance: ISectionDistance = {}
         for (const key in sectionRefs) {
-            const sectionY = sectionRefs[key].current.getBoundingClientRect().y
+            const sectionY = sectionRefs[key].current?.getBoundingClientRect().y!
             sectionDistance[key] = Math.abs(sectionY - tabsY)
         }
         const nearestDistance = Math.min(...Object.values(sectionDistance))
@@ -177,12 +169,16 @@ export default function BurgerIngredients() {
         }
     };
 
-    const sections = ['bun', 'sauce', 'main']
-    const refTabs = useRef(null)
-    const sectionRefs = {
-        bun: useRef(null),
-        sauce: useRef(null),
-        main: useRef(null),
+    interface ISectionRefs {
+        [name: string]: React.RefObject<HTMLElement>
+    }
+
+    const sections: Array<TSections> = ['bun', 'sauce', 'main']
+    const refTabs = useRef<HTMLDivElement>(null)
+    const sectionRefs: ISectionRefs = {
+        bun: useRef<HTMLElement>(null),
+        sauce: useRef<HTMLElement>(null),
+        main: useRef<HTMLElement>(null),
     }
 
     return (

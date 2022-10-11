@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { loginUser } from '../services/actions/auth';
 import { useFormValues } from '../utils/hooks';
 import { setIsPasswordReset } from '../services/slices/user';
-import { useEffect } from 'react'
+import { FormEvent, useEffect } from 'react'
 
 export function LoginPage() {
 
@@ -14,11 +14,11 @@ export function LoginPage() {
 
     useEffect(() => {
         dispatch(setIsPasswordReset(false))
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const onSubmit = e => {
+    const onSubmit = (e: FormEvent) => {
         e.preventDefault()
-        dispatch(loginUser(values))
+        dispatch<any>(loginUser(values))
     }
 
     return (

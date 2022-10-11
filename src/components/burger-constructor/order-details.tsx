@@ -7,6 +7,8 @@ import { getOrderNumber } from '../../services/actions/orders';
 import Modal from '../common/modal';
 import { clearOrderData, hideOrder } from '../../services/slices/constructor';
 import { constructorSelectors } from '../../services/selectors/constructor';
+import { TIngredient } from '../../utils/types';
+import { AnyAction } from 'redux';
 
 export default function OrderDetails() {
 
@@ -18,13 +20,14 @@ export default function OrderDetails() {
     const isOrderRequested = useSelector(constructorSelectors.isOrderRequested)
 
     const dispatch = useDispatch()
+
     useEffect(() => {
         if (isLoggedOn) {
-            const order_ids = bun
-                ? [bun._id, ...burgerIngredients.map(item => item._id), bun._id]
+            const order_ids: Array<string> = bun
+                ? [bun._id, ...burgerIngredients.map((item: TIngredient) => item._id), bun._id]
                 : []
             if (order_ids.length > 2) {
-                dispatch(getOrderNumber(order_ids))
+                dispatch<any>(getOrderNumber(order_ids))
             }
         }
     }, [isLoggedOn, showOrderModal])
@@ -48,7 +51,7 @@ export default function OrderDetails() {
                     {isOrderRequested
                         ? <div className={styles.lds_ellipsis}><div></div><div></div><div></div><div></div></div>
                         : <div className={styles.order_icon}>
-                            <CheckMarkIcon />
+                            <CheckMarkIcon type='primary' />
                         </div>
                     }
                     <p className={`text text_type_main-default ${styles.order_status}`}>

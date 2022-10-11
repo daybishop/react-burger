@@ -1,7 +1,9 @@
+import { Dispatch } from "redux"
+import { IForm } from "../../utils/types"
 import { forgotPasswordRequest, getUserRequest, loginRequest, logoutRequest, registerRequest, resetPasswordRequest, setUserRequest } from "../api/auth"
 import { setIsPasswordReset, setUser } from "../slices/user"
 
-export const loginUser = (form) => dispatch => {
+export const loginUser = (form: IForm) => (dispatch: Dispatch) => {
     loginRequest(form)
         .then(data => {
             dispatch(setUser(data.user))
@@ -12,7 +14,7 @@ export const loginUser = (form) => dispatch => {
         })
 }
 
-export const logoutUser = () => dispatch => {
+export const logoutUser = () => (dispatch: Dispatch) => {
     logoutRequest()
         .then(data => {
             if (data.success) {
@@ -22,7 +24,7 @@ export const logoutUser = () => dispatch => {
         .catch(reason => console.log(reason))
 }
 
-export const register = (form) => dispatch => {
+export const register = (form: IForm) => (dispatch: Dispatch) => {
     registerRequest(form)
         .then(data => {
             dispatch(setUser(data.user))
@@ -30,7 +32,7 @@ export const register = (form) => dispatch => {
         .catch(reason => console.log(reason))
 }
 
-export const forgotPassword = (form) => dispatch => {
+export const forgotPassword = (form: IForm) => (dispatch: Dispatch) => {
     forgotPasswordRequest(form)
         .then(data => {
             dispatch(setIsPasswordReset(true))
@@ -38,7 +40,7 @@ export const forgotPassword = (form) => dispatch => {
         .catch(reason => console.log(reason))
 }
 
-export const resetPassword = (form) => dispatch => {
+export const resetPassword = (form: IForm) => (dispatch: Dispatch) => {
     resetPasswordRequest(form)
         .then(data => {
             dispatch(setIsPasswordReset(false))
@@ -46,7 +48,7 @@ export const resetPassword = (form) => dispatch => {
         .catch(reason => console.log(reason))
 }
 
-export const getUser = () => dispatch => {
+export const getUser = () => (dispatch: Dispatch) => {
     getUserRequest()
         .then(data => {
             dispatch(setUser(data.user))
@@ -57,7 +59,7 @@ export const getUser = () => dispatch => {
         })
 }
 
-export const setUserData = form => dispatch => {
+export const setUserData = (form: IForm) => (dispatch: Dispatch) => {
     setUserRequest(form)
         .then(data => {
             dispatch(setUser(data.user))

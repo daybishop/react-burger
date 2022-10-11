@@ -3,25 +3,26 @@ import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-de
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSelectors } from '../../services/selectors/user';
-import { useEffect } from 'react';
+import { FormEvent, useEffect } from 'react';
 import { getUser, setUserData } from '../../services/actions/auth';
 import { useFormValues } from '../../utils/hooks';
 import { useState } from 'react';
+import { IForm } from '../../utils/types';
 
 export function ProfilePage() {
 
     const { values, setValues, handleChange } = useFormValues({ name: '', email: '' })
-    const [userDataChanged, setUserDataChanged] = useState(false)
+    const [userDataChanged, setUserDataChanged] = useState<boolean>(false)
     const name = useSelector(userSelectors.name)
     const email = useSelector(userSelectors.email)
     const dispatch = useDispatch()
 
-    const init = (values) => {
+    const init = (values: IForm) => {
         setValues({ ...values, name, email })
         setUserDataChanged(false)
     }
     useEffect(() => {
-        dispatch(getUser())
+        dispatch<any>(getUser())
         init({ name, email })
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -29,13 +30,13 @@ export function ProfilePage() {
         setUserDataChanged(name !== values.name || email !== values.email)
     }, [name, email, values])
 
-    const onSubmit = e => {
+    const onSubmit = (e: FormEvent) => {
         e.preventDefault()
-        dispatch(setUserData(values))
+        dispatch<any>(setUserData(values))
     }
 
     const onCancel = () => {
-        init()
+        init({})
     }
 
     return (

@@ -1,7 +1,27 @@
-import { checkResponse } from "../../components/common/api";
 import { API } from "../../utils/constants";
 import { deleteCookie, getCookie, setCookie } from "../../utils/cookie";
-import { doRequest } from "./common";
+import { IForm } from "../../utils/types";
+import { doRequest, fetchWithToken, init, IResponseCommon } from "./common";
+
+// type TResponseTokensData = {
+//     accessToken: string
+//     refreshToken: string
+// } | null
+
+
+interface IResponseTokens extends IResponseCommon {
+    accessToken: string
+    refreshToken: string
+}
+
+interface IResponseUser extends IResponseTokens {
+    user: {
+        email: string
+        name: string
+    }
+}
+
+export type TResponse = IResponseCommon | IResponseTokens | IResponseUser
 
 // POST https://norma.nomoreparties.space/api/auth/login - эндпоинт для авторизации.
 // POST https://norma.nomoreparties.space/api/auth/register - эндпоинт для регистрации пользователя.
@@ -20,20 +40,7 @@ const REGISTER = `${API}/auth/register`
 const PASSWORD_FORGOT = `${API}/password-reset`
 const PASSWORD_RESET = `${API}/password-reset/reset`
 
-const init = {
-    method: 'POST',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
-    headers: {
-        'Content-Type': 'application/json',
-        // 'authorization': getCookie('accessToken')
-    },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer',
-}
-
-const setTokens = data => {
+const setTokens = (data: IResponseTokens | null) => {
     deleteCookie('accessToken')
     deleteCookie('refreshToken')
     if (data) {
@@ -42,13 +49,13 @@ const setTokens = data => {
     }
 }
 
-export const getAccessToken = () => {
+export const getAccessToken = (): string | null => {
     let accessToken = getCookie('accessToken')
     if (!accessToken) return null
     const accessTokenData = JSON.parse(window.atob(accessToken.split('.')[1]))
 
     if (Date.now() > (accessTokenData.exp * 1000 - 60 * 1000)) {
-        refreshTokenRequest()
+        refreshTokenRequest<IResponseTokens>()
             .then(data => setTokens(data))
             .catch(reason => {
                 setTokens(null)
@@ -59,17 +66,8 @@ export const getAccessToken = () => {
     return accessToken || null
 }
 
-const fetchWithToken = async (url, init) => {
-    const accessToken = getAccessToken()
-    if (!accessToken) return new Promise.reject('Access Token not found');
-    return await doRequest(url, {
-        ...init,
-        headers: { ...init.headers, authorization: `Bearer ${accessToken}` },
-    })
-}
-
-export const loginRequest = async form => {
-    return await doRequest(LOGIN, {
+export const loginRequest = async (form: IForm) => {
+    return await doRequest<IResponseUser>(LOGIN, {
         ...init,
         body: JSON.stringify(form),
     })
@@ -80,7 +78,7 @@ export const loginRequest = async form => {
 }
 
 export const logoutRequest = async () => {
-    return doRequest(LOGOUT, {
+    return doRequest<IResponseTokens>(LOGOUT, {
         ...init,
         body: JSON.stringify({ 'token': `${getCookie('refreshToken')}` }),
     })
@@ -90,8 +88,8 @@ export const logoutRequest = async () => {
         })
 }
 
-export const registerRequest = async form => {
-    return await doRequest(REGISTER, {
+export const registerRequest = async (form: IForm) => {
+    return await doRequest<IResponseUser>(REGISTER, {
         ...init,
         body: JSON.stringify(form),
     })
@@ -101,43 +99,39 @@ export const registerRequest = async form => {
         })
 }
 
-export const forgotPasswordRequest = async form => {
-    return await doRequest(PASSWORD_FORGOT, {
+export const forgotPasswordRequest = async (form: IForm) => {
+    return await doRequest<TResponse>(PASSWORD_FORGOT, {
         ...init,
         body: JSON.stringify(form),
     })
 }
 
-export const resetPasswordRequest = async form => {
-    return await doRequest(PASSWORD_RESET, {
+export const resetPasswordRequest = async (form: IForm) => {
+    return await doRequest<TResponse>(PASSWORD_RESET, {
         ...init,
         body: JSON.stringify(form),
     })
 }
 
 export const getUserRequest = async () => {
-    return await fetchWithToken(USER, {
+    return await fetchWithToken<IResponseUser>(USER, {
         ...init,
         method: 'GET',
     })
 }
 
-export const setUserRequest = async form => {
-    return await fetchWithToken(USER, {
+export const setUserRequest = async (form: IForm) => {
+    return await fetchWithToken<IResponseUser>(USER, {
         ...init,
         method: 'PATCH',
         body: JSON.stringify(form),
     })
-        .then(checkResponse)
 }
 
-export const refreshTokenRequest = async () => {
-    return await doRequest(TOKEN, {
+export const refreshTokenRequest = async <T>() => {
+    return await doRequest<T>(TOKEN, {
         ...init,
         body: JSON.stringify({ 'token': `${getCookie('refreshToken')}` }),
     })
-        .then(data => {
-            setTokens(data)
-        })
         .catch()
 }

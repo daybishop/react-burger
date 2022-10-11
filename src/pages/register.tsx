@@ -4,6 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { register } from '../services/actions/auth';
 import { useFormValues } from '../utils/hooks';
+import { FormEvent } from 'react';
 
 export function RegisterPage() {
 
@@ -11,9 +12,9 @@ export function RegisterPage() {
     const dispatch = useDispatch()
     const history = useHistory()
 
-    const onSubmit = e => {
+    const onSubmit = (e: FormEvent) => {
         e.preventDefault();
-        dispatch(register(values))
+        dispatch<any>(register(values))
         history.replace({ pathname: '/' });
     }
 

@@ -1,9 +1,8 @@
-import { useRef } from 'react';
+import { FC, useRef } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
-import { ingredientType } from '../../utils/types'
+import { TBunType, TIngredient, TIngredientWithUUID } from '../../utils/types'
 import styles from './burger-constructor.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { backup, deleteBun, deleteItem, hideOrder, moveItem, restore, showOrder } from '../../services/slices/constructor';
@@ -23,7 +22,7 @@ const TotalPrice = () => {
             <span className="text text_type_digits-medium">
                 {totalPrice}
             </span>
-            <CurrencyIcon />
+            <CurrencyIcon type='primary' />
         </div>
     )
 }
@@ -53,7 +52,12 @@ const OrderButton = () => {
     )
 }
 
-const BurgerBun = ({ ingredient, type }) => {
+interface IBurgerBun {
+    ingredient: TIngredient
+    type: TBunType
+}
+
+const BurgerBun: FC<IBurgerBun> = ({ ingredient, type }) => {
 
     const dispatch = useDispatch()
     const { name, price, image } = ingredient
@@ -77,20 +81,28 @@ const BurgerBun = ({ ingredient, type }) => {
     )
 }
 
-BurgerBun.propTypes = {
-    ingredient: (ingredientType),
-    type: PropTypes.oneOf(["top", "bottom"]),
-};
+interface IBurgerElement {
+    ingredient: TIngredientWithUUID
+    index: number
+}
 
-const BurgerElement = ({ ingredient, index }) => {
+const BurgerElement: FC<IBurgerElement> = ({ ingredient, index }) => {
 
     const dispatch = useDispatch()
     const { name, price, image, uuid } = ingredient
-    const ref = useRef(null)
+    const ref = useRef<HTMLInputElement>(null)
 
-    const [{ handlerId }, dropRef] = useDrop(() => ({
+    interface IDragItem {
+        index: number
+    }
+
+    interface ICollectedProps {
+        handlerId: any;
+    }
+
+    const [{ handlerId }, dropRef] = useDrop<IDragItem, any, ICollectedProps>({
         accept: 'burger_item',
-        collect(monitor) {
+        collect: (monitor) => {
             return {
                 handlerId: monitor.getHandlerId(),
             }
@@ -107,10 +119,10 @@ const BurgerElement = ({ ingredient, index }) => {
                 return
             }
 
-            const hoverBoundingRect = ref.current?.getBoundingClientRect();
+            const hoverBoundingRect = ref?.current?.getBoundingClientRect();
             const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
             const clientOffset = monitor.getClientOffset();
-            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+            const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
 
             if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
                 return
@@ -123,9 +135,9 @@ const BurgerElement = ({ ingredient, index }) => {
 
             item.index = hoverIndex;
         },
-    }), [index])
+    }, [index])
 
-    const [{ opacity }, dragRef] = useDrag({
+    const [{ opacity }, dragRef] = useDrag<IDragItem, any, { opacity: number }>({
         type: 'burger_item',
         item: { index },
         canDrag: () => {
@@ -150,7 +162,7 @@ const BurgerElement = ({ ingredient, index }) => {
     return (
         ingredient &&
         <div className={styles.element} style={{ opacity }} ref={ref} data-handler-id={handlerId}>
-            <DragIcon />
+            <DragIcon type='primary' />
             <ConstructorElement
                 text={name}
                 price={price}
@@ -160,11 +172,6 @@ const BurgerElement = ({ ingredient, index }) => {
         </div>
     )
 }
-
-BurgerElement.propTypes = {
-    ingredient: (ingredientType),
-    index: PropTypes.number.isRequired,
-};
 
 
 export default function BurgerConstructor() {
@@ -186,10 +193,6 @@ export default function BurgerConstructor() {
         accept: 'ingredient',
     }))
 
-    const handleMove = (dragIndex, hoverIndex) => {
-        dispatch(moveItem({ dragIndex, hoverIndex }))
-    }
-
     return (
         <section className={styles.section} ref={dropRef}>
             {
@@ -202,12 +205,11 @@ export default function BurgerConstructor() {
                 </div>
             }
             <div className={styles.elements}>
-                {burgerIngredients.map((item, index) =>
+                {burgerIngredients.map((item: TIngredientWithUUID, index: number) =>
                     <BurgerElement
                         ingredient={item}
                         index={index}
                         key={item.uuid}
-                        handleMove={handleMove}
                     />
                 )}
             </div>

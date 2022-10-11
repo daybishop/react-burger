@@ -1,8 +1,8 @@
 import { setOrderNumber, setOrderRequested, showOrder } from "../slices/constructor";
-import PropTypes from 'prop-types';
 import { saveOrderRequest } from "../api/orders";
+import { Dispatch } from "redux";
 
-export const getOrderNumber = (items) => dispatch => {
+export const getOrderNumber = (items: Array<string>) => (dispatch: Dispatch) => {
     dispatch(setOrderRequested(true))
     dispatch(showOrder())
     saveOrderRequest(items)
@@ -15,8 +15,4 @@ export const getOrderNumber = (items) => dispatch => {
         .finally(() => {
             dispatch(setOrderRequested(false))
         })
-}
-
-getOrderNumber.propTypes = {
-    items: PropTypes.arrayOf(PropTypes.string).isRequired,
 }
