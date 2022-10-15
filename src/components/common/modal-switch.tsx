@@ -6,12 +6,11 @@ import { NotFoundPage } from "../../pages/404";
 import { ForgotPasswordPage } from "../../pages/forgot-password";
 import { LoginPage } from "../../pages/login";
 import { LogoutPage } from "../../pages/logout";
+import { MainPage } from "../../pages/main";
 import { ProfilePage } from "../../pages/profile/profile";
 import { RegisterPage } from "../../pages/register";
 import { ResetPasswordPage } from "../../pages/reset-password";
 import { clearSelectedItem } from "../../services/slices/ingredients";
-import BurgerConstructor from "../burger-constructor/burger-constructor";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import IngredientDetails from "../burger-ingredients/ingredient-details";
 import { AnonymousRoute } from "../route/anonymous-route";
 import { ProtectedRoute } from "../route/protected-route";
@@ -39,8 +38,7 @@ export const ModalSwitch = () => {
             <Switch location={background || location}>
                 <Route path='/' exact >
                     <DndProvider backend={HTML5Backend}>
-                        <BurgerIngredients />
-                        <BurgerConstructor />
+                        <MainPage />
                     </DndProvider>
                 </Route>
                 <Route path='/logout' component={LogoutPage} />
