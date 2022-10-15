@@ -183,9 +183,6 @@ export default function BurgerIngredients() {
 
     return (
         <section className={styles.section}>
-            <p className="text text_type_main-large pt-10 pb-5">
-                Соберите бургер
-            </p>
             <Tabs handleTabClick={onTabClick} refProp={refTabs} />
             <div className={styles.scroll_box} onScroll={handleScroll}>
                 {
