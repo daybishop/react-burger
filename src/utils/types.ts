@@ -39,3 +39,34 @@ export type TIngredientWithUUID = TIngredient & { uuid: string }
 export interface IForm {
     [key: string]: string
 }
+
+// Feed
+export type TFeedOrder = {
+    ingredients: string[]
+    _id: string
+    status: 'done' | 'created' | 'pending'
+    name: string
+    number: number
+    createdAt: string
+    updatedAt: string
+}
+
+export type TFeedOrders = {
+    orders: TFeedOrder[]
+    total: number
+    totalToday: number
+}
+
+export type TFeedOrdersResponse = {
+    success: boolean
+    orders: TFeedOrder[]
+    total: number
+    totalToday: number
+}
+
+export type TErrorResponse = {
+    success: boolean
+    message: string
+}
+
+export type TWSResponse = TErrorResponse | TFeedOrdersResponse

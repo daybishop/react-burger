@@ -1,0 +1,83 @@
+.wrapper {
+    width: 640px;
+    height: 640px;
+    /* position: absolute; */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    text-align: left;
+}
+
+.number {
+    text-align: center;
+}
+
+.status {
+    margin-top: 12px;
+    color: #00CCCC;
+}
+
+.ingredients {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+    overflow-y: auto;
+    max-height: 300px;
+    min-height: 300px;
+    padding-right: 24px;
+}
+
+.ingredients::-webkit-scrollbar {
+    width: 10px;
+}
+
+.ingredients::-webkit-scrollbar-track {
+    background-color: #1C1C21;
+}
+
+.ingredients::-webkit-scrollbar-thumb {
+    background-color: #8585AD;
+}
+
+
+.ingredient {
+    display: flex;
+    gap: 16;
+    align-items: center;
+    /* width: 600px; */
+}
+
+.ingredient_name {
+    margin-right: auto;
+}
+
+.ingredient_image {
+    height: 64px;
+    width: 124px;
+    background: radial-gradient(#792828, #242c74);
+    clip-path: circle(32px at 50% 50%);
+
+}
+
+.ingredient img {
+    margin: 2px;
+    height: 60px;
+    width: 120px;
+    /* border-radius: 50%; */
+    clip-path: circle(30px at 50% 50%);
+    background-color: #1C1C21;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.time {
+    color: #8585AD;
+}
