@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../services/actions/ingredients';
 import { BrowserRouter } from 'react-router-dom';
 import { ModalSwitch } from '../common/modal-switch';
+import { connectionStart } from '../../services/slices/feed';
 
 const App = () => {
 
@@ -12,7 +13,8 @@ const App = () => {
 
   useEffect(() => {
     dispatch<any>(fetchIngredients())
-  }, [])
+    dispatch(connectionStart())
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <BrowserRouter>

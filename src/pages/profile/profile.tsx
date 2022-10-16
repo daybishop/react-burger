@@ -1,6 +1,6 @@
 import styles from './profile.module.css';
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSelectors } from '../../services/selectors/user';
 import { FormEvent, useEffect } from 'react';
@@ -8,8 +8,15 @@ import { getUser, setUserData } from '../../services/actions/auth';
 import { useFormValues } from '../../utils/hooks';
 import { useState } from 'react';
 import { IForm } from '../../utils/types';
+import { Orders } from '../../components/orders/orders';
+import { ordersSelectors } from '../../services/selectors/orders';
+import { connectionStart } from '../../services/slices/orders';
 
 export function ProfilePage() {
+
+    const isProfile = useRouteMatch({ path: '/profile', exact: true })
+    const isOrders = useRouteMatch({ path: '/profile/orders', exact: true })
+    const orders = useSelector(ordersSelectors.orders)
 
     const { values, setValues, handleChange } = useFormValues({ name: '', email: '' })
     const [userDataChanged, setUserDataChanged] = useState<boolean>(false)
@@ -24,6 +31,7 @@ export function ProfilePage() {
     useEffect(() => {
         dispatch<any>(getUser())
         init({ name, email })
+        dispatch(connectionStart(''))
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
@@ -67,17 +75,22 @@ export function ProfilePage() {
                 </li>
                 <span>В этом разделе вы можете изменить свои персональные данные</span>
             </ul>
-            <div className={styles.user_data}>
-                <form className={styles.form} onSubmit={onSubmit}>
-                    <Input onChange={handleChange} placeholder='Имя' name='name' value={values.name || ''}></Input>
-                    <EmailInput onChange={handleChange} name='email' value={values.email || ''}></EmailInput>
-                    <PasswordInput onChange={e => { }} name='password' value=''></PasswordInput>
-                    {userDataChanged && <div className={styles.buttons}>
-                        <Button onClick={onCancel} type="secondary">Отмена</Button>
-                        <Button>Сохранить</Button>
-                    </div>}
-                </form>
-            </div>
+            {
+                isProfile && <div className={styles.user_data}>
+                    <form className={styles.form} onSubmit={onSubmit}>
+                        <Input onChange={handleChange} placeholder='Имя' name='name' value={values.name || ''}></Input>
+                        <EmailInput onChange={handleChange} name='email' value={values.email || ''}></EmailInput>
+                        <PasswordInput onChange={e => { }} name='password' value=''></PasswordInput>
+                        {userDataChanged && <div className={styles.buttons}>
+                            <Button onClick={onCancel} type="secondary">Отмена</Button>
+                            <Button>Сохранить</Button>
+                        </div>}
+                    </form>
+                </div>
+            }
+            {
+                isOrders && <Orders orders={orders} />
+            }
         </div >
     );
 }
