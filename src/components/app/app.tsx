@@ -5,7 +5,8 @@ import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../services/actions/ingredients';
 import { BrowserRouter } from 'react-router-dom';
 import { ModalSwitch } from '../common/modal-switch';
-import { connectionStart } from '../../services/slices/feed';
+import { connectionStart as feedConnectionStart } from '../../services/slices/feed';
+import { connectionStart as ordersConnectionStart } from '../../services/slices/orders';
 
 const App = () => {
 
@@ -13,7 +14,8 @@ const App = () => {
 
   useEffect(() => {
     dispatch<any>(fetchIngredients())
-    dispatch(connectionStart())
+    dispatch(feedConnectionStart(''))
+    dispatch(ordersConnectionStart(''))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

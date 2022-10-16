@@ -1,6 +1,6 @@
 import { CaseReducerActions, SliceCaseReducers } from '@reduxjs/toolkit';
 import type { Middleware, MiddlewareAPI } from 'redux';
-import { IFeedState } from '../slices/orders';
+import { IOrdersState } from '../slices/orders';
 import { getAccessToken } from './auth';
 
 // import type { AppActions, AppDispatch, RootState } from '../types';
@@ -9,7 +9,7 @@ type AppActions = any
 type AppDispatch = any
 type RootState = any
 
-type TActions = CaseReducerActions<SliceCaseReducers<IFeedState>>
+type TActions = CaseReducerActions<SliceCaseReducers<IOrdersState>>
 
 export const socketMiddleware = (wsUrl: string, actions: TActions, useToken?: boolean): Middleware => {
     return ((store: MiddlewareAPI<AppDispatch, RootState>) => {

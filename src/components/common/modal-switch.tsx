@@ -31,7 +31,7 @@ export const ModalSwitch = () => {
 
     const dispatch = useDispatch()
     const hideModal = () => {
-        dispatch(clearSelectedItem())
+        dispatch(clearSelectedItem(''))
         history.goBack()
     }
     const hideOrderModal = () => {

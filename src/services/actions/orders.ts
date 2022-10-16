@@ -4,7 +4,7 @@ import { Dispatch } from "redux";
 
 export const getOrderNumber = (items: Array<string>) => (dispatch: Dispatch) => {
     dispatch(setOrderRequested(true))
-    dispatch(showOrder())
+    dispatch(showOrder(''))
     saveOrderRequest(items)
         .then(data => {
             dispatch(setOrderNumber(data.order.number))

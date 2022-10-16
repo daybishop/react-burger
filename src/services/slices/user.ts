@@ -1,13 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, SliceCaseReducers } from '@reduxjs/toolkit'
+
+interface IUserState {
+    name: string
+    email: string
+    isLoggedOn: boolean
+    isPasswordReset: boolean
+}
 
 const initialState = {
-    name: null,
-    email: null,
+    name: '',
+    email: '',
     isLoggedOn: false,
     isPasswordReset: false,
 }
 
-export const userSlice = createSlice({
+export const userSlice = createSlice<IUserState, SliceCaseReducers<IUserState>, string>({
     name: 'user',
     initialState,
     reducers: {
@@ -18,8 +25,8 @@ export const userSlice = createSlice({
                 state.isLoggedOn = true
             }
             else {
-                state.name = null
-                state.email = null
+                state.name = ''
+                state.email = ''
                 state.isLoggedOn = false
             }
         },

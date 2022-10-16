@@ -31,7 +31,7 @@ interface IOrderInfo {
 export const OrderInfo: FC = () => {
 
     const ingredients = useSelector(ingredientsSelectors.items)
-    const orders = useSelector(feedSelectors.orders).concat(useSelector(ordersSelectors.orders))
+    const orders = Array.prototype.concat(useSelector(feedSelectors.orders), useSelector(ordersSelectors.orders))
     const { id } = useParams<IOrderInfo>()
 
     const order: TFeedOrder = orders.find((order: TFeedOrder) => order._id === id)

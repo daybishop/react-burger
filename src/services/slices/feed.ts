@@ -1,4 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, SliceCaseReducers } from '@reduxjs/toolkit'
+import { TFeedOrder } from '../../utils/types'
+
+interface IOrdersState {
+    wsConnected: boolean
+    error: string | undefined
+    orders: TFeedOrder[] | []
+    total: number
+    totalToday: number
+}
 
 export const initialState = {
     wsConnected: false,
@@ -8,7 +17,7 @@ export const initialState = {
     totalToday: 0
 }
 
-export const feedSlice = createSlice({
+export const feedSlice = createSlice<IOrdersState, SliceCaseReducers<IOrdersState>, string>({
     name: 'feed',
     initialState,
     reducers: {

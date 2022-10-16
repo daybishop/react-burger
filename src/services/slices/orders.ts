@@ -1,10 +1,10 @@
-import { createSlice, Slice, SliceCaseReducers } from '@reduxjs/toolkit'
-import { TFeedOrder, TFeedOrders } from '../../utils/types'
+import { createSlice, SliceCaseReducers } from '@reduxjs/toolkit'
+import { TFeedOrder } from '../../utils/types'
 
-export interface IFeedState {
+export interface IOrdersState {
     wsConnected: boolean
     error: string | undefined
-    orders: TFeedOrder[] | []
+    orders: Array<TFeedOrder> | []
     total: number | null
     totalToday: number | null
 }
@@ -17,7 +17,7 @@ export const initialState = {
     totalToday: 0
 }
 
-export const ordersSlice = createSlice<IFeedState, SliceCaseReducers<IFeedState>, string>({
+export const ordersSlice = createSlice<IOrdersState, SliceCaseReducers<IOrdersState>, string>({
     name: 'orders',
     initialState,
     reducers: {

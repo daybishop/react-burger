@@ -5,7 +5,7 @@ import { fetchIngredientsData } from "../api/ingredients";
 const { startLoading, loadingSuccess } = ingredientsSlice.actions;
 
 export const fetchIngredients = () => (dispatch: Dispatch) => {
-    dispatch(startLoading())
+    dispatch(startLoading(''))
 
     fetchIngredientsData()
         .then(data => {

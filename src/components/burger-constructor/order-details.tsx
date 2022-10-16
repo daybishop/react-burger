@@ -33,8 +33,8 @@ export default function OrderDetails() {
     }, [isLoggedOn, showOrderModal])
 
     const handleClose = () => {
-        dispatch(hideOrder())
-        dispatch(clearOrderData())
+        dispatch(hideOrder(''))
+        dispatch(clearOrderData(''))
     }
 
     return (

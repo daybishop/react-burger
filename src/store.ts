@@ -14,7 +14,8 @@ const preloadedState = loadState() || { constructor: initialState }
 
 export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware(thunk)
+        getDefaultMiddleware()
+            .concat(thunk)
             .concat(logger)
             .concat(socketMiddleware('wss://norma.nomoreparties.space/orders/all', feedActions))
             .concat(socketMiddleware('wss://norma.nomoreparties.space/orders', orderActions, true)),
@@ -29,5 +30,5 @@ export const store = configureStore({
     },
 })
 
-// export type AppDispatch = typeof store.dispatch
-// export type RootState = ReturnType<typeof store.getState>
+export type TAppDispatch = typeof store.dispatch
+export type TRootState = ReturnType<typeof store.getState>

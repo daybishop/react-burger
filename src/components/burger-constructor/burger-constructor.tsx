@@ -35,7 +35,7 @@ const OrderButton = () => {
     const items = useSelector(constructorSelectors.items)
 
     const onClick = () => {
-        if (bun && items.length > 0) dispatch(showOrder())
+        if (bun && items.length > 0) dispatch(showOrder(''))
     }
 
     return (
@@ -64,7 +64,7 @@ const BurgerBun: FC<IBurgerBun> = ({ ingredient, type }) => {
     const burgerIngredients = useSelector(constructorSelectors.items)
     const isLocked = burgerIngredients.length > 0;
 
-    const onClose = () => dispatch(deleteBun())
+    const onClose = () => dispatch(deleteBun(''))
 
     return (
         ingredient &&
@@ -141,7 +141,7 @@ const BurgerElement: FC<IBurgerElement> = ({ ingredient, index }) => {
         type: 'burger_item',
         item: { index },
         canDrag: () => {
-            dispatch(backup())
+            dispatch(backup(''))
             return true
         },
         collect: (monitor) => ({
@@ -150,7 +150,7 @@ const BurgerElement: FC<IBurgerElement> = ({ ingredient, index }) => {
         end: (item, monitor) => {
             const dropResult = monitor.getDropResult()
             if (!dropResult) {
-                dispatch(restore())
+                dispatch(restore(''))
             }
         }
     }, [index])
@@ -186,7 +186,7 @@ export default function BurgerConstructor() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (history.action === 'PUSH') dispatch(hideOrder())
+        if (history.action === 'PUSH') dispatch(hideOrder(''))
     }, [])
 
     const [, dropRef] = useDrop(() => ({
