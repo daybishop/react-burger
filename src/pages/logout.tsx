@@ -1,19 +1,19 @@
 import styles from './register.module.css';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { logoutUser } from '../services/actions/auth';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { FormEvent } from 'react';
+import { useAppDispatch } from '../utils/hooks';
 
 export function LogoutPage() {
 
     const history = useHistory()
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
-        dispatch<any>(logoutUser())
+        dispatch(logoutUser())
         history.replace('/login')
     }
 

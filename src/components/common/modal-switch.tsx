@@ -1,6 +1,5 @@
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useDispatch } from "react-redux";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { NotFoundPage } from "../../pages/404";
 import { FeedPage } from "../../pages/feed";
@@ -13,6 +12,7 @@ import { ProfilePage } from "../../pages/profile/profile";
 import { RegisterPage } from "../../pages/register";
 import { ResetPasswordPage } from "../../pages/reset-password";
 import { clearSelectedItem } from "../../services/slices/ingredients";
+import { useAppDispatch } from "../../utils/hooks";
 import IngredientDetails from "../burger-ingredients/ingredient-details";
 import { AnonymousRoute } from "../route/anonymous-route";
 import { ProtectedRoute } from "../route/protected-route";
@@ -29,7 +29,7 @@ export const ModalSwitch = () => {
 
     const background = location && location.state && location.state.background;
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const hideModal = () => {
         dispatch(clearSelectedItem(''))
         history.goBack()

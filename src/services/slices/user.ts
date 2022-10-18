@@ -37,5 +37,6 @@ export const userSlice = createSlice<IUserState, SliceCaseReducers<IUserState>, 
 })
 
 export const { setUser, setIsPasswordReset } = userSlice.actions
+export type TUsersActions = typeof userSlice.actions
 
 export default userSlice.reducer

@@ -1,19 +1,19 @@
 import './app.module.css';
 import AppHeader from '../app-header/app-header';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../services/actions/ingredients';
 import { BrowserRouter } from 'react-router-dom';
 import { ModalSwitch } from '../common/modal-switch';
 import { connectionStart as feedConnectionStart } from '../../services/slices/feed';
 import { connectionStart as ordersConnectionStart } from '../../services/slices/orders';
+import { useAppDispatch } from '../../utils/hooks';
 
 const App = () => {
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch<any>(fetchIngredients())
+    dispatch(fetchIngredients())
     dispatch(feedConnectionStart(''))
     dispatch(ordersConnectionStart(''))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps

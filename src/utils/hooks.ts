@@ -1,4 +1,6 @@
 import { ChangeEvent, useState } from "react";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { TAppDispatch, TRootState } from "../store";
 import { IForm } from "./types";
 
 export function useFormValues(initValues: IForm) {
@@ -12,3 +14,6 @@ export function useFormValues(initValues: IForm) {
 
     return { values, setValues, handleChange }
 }
+
+export const useAppDispatch: () => TAppDispatch = useDispatch
+export const useAppSelector: TypedUseSelectorHook<TRootState> = useSelector

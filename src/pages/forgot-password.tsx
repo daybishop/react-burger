@@ -1,22 +1,21 @@
 import styles from './register.module.css';
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, Redirect } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { forgotPassword } from '../services/actions/auth';
-import { useFormValues } from '../utils/hooks';
+import { useAppDispatch, useAppSelector, useFormValues } from '../utils/hooks';
 import { userSelectors } from '../services/selectors/user';
 import { FormEvent } from 'react';
 
 
 export function ForgotPasswordPage() {
 
-    const isPasswordReset = useSelector(userSelectors.isPasswordReset)
+    const isPasswordReset = useAppSelector(userSelectors.isPasswordReset)
     const { values, handleChange } = useFormValues({ email: '' })
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
-        dispatch<any>(forgotPassword(values))
+        dispatch(forgotPassword(values))
     }
 
     if (isPasswordReset) return <Redirect to='/reset-password' />

@@ -1,7 +1,7 @@
 import { FC } from "react"
-import { useSelector } from "react-redux"
 import { Link, useLocation } from "react-router-dom"
 import { ingredientsSelectors } from "../../services/selectors/ingredients"
+import { useAppSelector } from "../../utils/hooks"
 import { TFeedOrder, TIngredient } from "../../utils/types"
 import { DateTime } from "../datetime/datetime"
 import { IngredientCircle } from "../ingredients/ingredient-circle"
@@ -16,7 +16,7 @@ interface IIngredients {
 
 const Ingredients: FC<IIngredients> = ({ items }) => {
 
-    const ingredients = useSelector(ingredientsSelectors.items)
+    const ingredients = useAppSelector(ingredientsSelectors.items)
     const images = items.reduce<string[]>(
         (prev, item) => {
             const ingredient = ingredients.find((ingredient: TIngredient) => ingredient._id === item)
@@ -57,7 +57,7 @@ export const Order: FC<IOrder> = ({ order }) => {
 
     const location = useLocation()
     const { _id } = order
-    const ingredients = useSelector(ingredientsSelectors.items)
+    const ingredients = useAppSelector(ingredientsSelectors.items)
     const total_price = order.ingredients.reduce<number>(
         (prev, item) => {
             const ingredient = ingredients.find((ingredient: TIngredient) => ingredient._id === item)

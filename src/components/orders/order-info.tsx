@@ -1,5 +1,4 @@
 import { FC } from "react"
-import { useSelector } from "react-redux"
 import { ingredientsSelectors } from "../../services/selectors/ingredients"
 import { TFeedOrder, TIngredient } from "../../utils/types"
 import styles from "./order-info.module.css"
@@ -8,6 +7,7 @@ import { IngredientCircle } from "../ingredients/ingredient-circle"
 import { useParams } from "react-router-dom"
 import { feedSelectors } from "../../services/selectors/feed"
 import { ordersSelectors } from "../../services/selectors/orders"
+import { useAppSelector } from "../../utils/hooks"
 
 interface IIngredient {
     item: TIngredient
@@ -31,8 +31,8 @@ interface IOrderInfo {
 
 export const OrderInfo: FC = () => {
 
-    const ingredients = useSelector(ingredientsSelectors.items)
-    const orders = Array.prototype.concat(useSelector(feedSelectors.orders), useSelector(ordersSelectors.orders))
+    const ingredients = useAppSelector(ingredientsSelectors.items)
+    const orders = Array.prototype.concat(useAppSelector(feedSelectors.orders), useAppSelector(ordersSelectors.orders))
     const { id } = useParams<IOrderInfo>()
 
     const order: TFeedOrder = orders.find((order: TFeedOrder) => order._id === id)

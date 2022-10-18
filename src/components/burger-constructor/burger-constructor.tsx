@@ -4,7 +4,6 @@ import { CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { TBunType, TIngredient, TIngredientWithUUID } from '../../utils/types'
 import styles from './burger-constructor.module.css';
-import { useDispatch, useSelector } from 'react-redux';
 import { backup, deleteBun, deleteItem, hideOrder, moveItem, restore, showOrder } from '../../services/slices/constructor';
 import { useDrag, useDrop } from 'react-dnd';
 import { Link, useHistory } from 'react-router-dom';
@@ -12,10 +11,11 @@ import { constructorSelectors } from '../../services/selectors/constructor';
 import OrderDetails from './order-details';
 import { userSelectors } from '../../services/selectors/user';
 import { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 
 const TotalPrice = () => {
 
-    const totalPrice = useSelector(constructorSelectors.totalPrice)
+    const totalPrice = useAppSelector(constructorSelectors.totalPrice)
 
     return (
         <div className={styles.total_price}>
@@ -29,10 +29,10 @@ const TotalPrice = () => {
 
 const OrderButton = () => {
 
-    const dispatch = useDispatch()
-    const isLoggedOn = useSelector(userSelectors.isLoggedOn)
-    const bun = useSelector(constructorSelectors.bun)
-    const items = useSelector(constructorSelectors.items)
+    const dispatch = useAppDispatch()
+    const isLoggedOn = useAppSelector(userSelectors.isLoggedOn)
+    const bun = useAppSelector(constructorSelectors.bun)
+    const items = useAppSelector(constructorSelectors.items)
 
     const onClick = () => {
         if (bun && items.length > 0) dispatch(showOrder(''))
@@ -59,9 +59,9 @@ interface IBurgerBun {
 
 const BurgerBun: FC<IBurgerBun> = ({ ingredient, type }) => {
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const { name, price, image } = ingredient
-    const burgerIngredients = useSelector(constructorSelectors.items)
+    const burgerIngredients = useAppSelector(constructorSelectors.items)
     const isLocked = burgerIngredients.length > 0;
 
     const onClose = () => dispatch(deleteBun(''))
@@ -88,7 +88,7 @@ interface IBurgerElement {
 
 const BurgerElement: FC<IBurgerElement> = ({ ingredient, index }) => {
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const { name, price, image, uuid } = ingredient
     const ref = useRef<HTMLInputElement>(null)
 
@@ -176,14 +176,14 @@ const BurgerElement: FC<IBurgerElement> = ({ ingredient, index }) => {
 
 export default function BurgerConstructor() {
 
-    const burgerIngredients = useSelector(constructorSelectors.items)
-    const bun = useSelector(constructorSelectors.bun)
+    const burgerIngredients = useAppSelector(constructorSelectors.items)
+    const bun = useAppSelector(constructorSelectors.bun)
 
-    const isLoggedOn = useSelector(userSelectors.isLoggedOn)
-    const showOrderModal = useSelector(constructorSelectors.showOrderModal)
+    const isLoggedOn = useAppSelector(userSelectors.isLoggedOn)
+    const showOrderModal = useAppSelector(constructorSelectors.showOrderModal)
 
     const history = useHistory()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         if (history.action === 'PUSH') dispatch(hideOrder(''))

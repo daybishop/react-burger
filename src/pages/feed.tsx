@@ -1,13 +1,13 @@
 import { Orders } from "../components/orders/orders"
 import { FeedTotal } from "../components/feed/feed-total"
-import { useSelector } from "react-redux";
 import { feedSelectors } from "../services/selectors/feed";
+import { useAppSelector } from "../utils/hooks";
 
 export const FeedPage = () => {
 
-    const orders = useSelector(feedSelectors.orders)
-    const total = useSelector(feedSelectors.total)
-    const totalToday = useSelector(feedSelectors.totalToday)
+    const orders = useAppSelector(feedSelectors.orders)
+    const total = useAppSelector(feedSelectors.total)
+    const totalToday = useAppSelector(feedSelectors.totalToday)
 
     return (
         <>

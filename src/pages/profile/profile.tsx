@@ -1,11 +1,10 @@
 import styles from './profile.module.css';
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { NavLink, useRouteMatch } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { userSelectors } from '../../services/selectors/user';
 import { FormEvent, useEffect } from 'react';
 import { getUser, setUserData } from '../../services/actions/auth';
-import { useFormValues } from '../../utils/hooks';
+import { useAppDispatch, useAppSelector, useFormValues } from '../../utils/hooks';
 import { useState } from 'react';
 import { IForm } from '../../utils/types';
 import { Orders } from '../../components/orders/orders';
@@ -15,20 +14,20 @@ export function ProfilePage() {
 
     const isProfile = useRouteMatch({ path: '/profile', exact: true })
     const isOrders = useRouteMatch({ path: '/profile/orders', exact: true })
-    const orders = useSelector(ordersSelectors.orders)
+    const orders = useAppSelector(ordersSelectors.orders)
 
     const { values, setValues, handleChange } = useFormValues({ name: '', email: '' })
     const [userDataChanged, setUserDataChanged] = useState<boolean>(false)
-    const name = useSelector(userSelectors.name)
-    const email = useSelector(userSelectors.email)
-    const dispatch = useDispatch()
+    const name = useAppSelector(userSelectors.name)
+    const email = useAppSelector(userSelectors.email)
+    const dispatch = useAppDispatch()
 
     const init = (values: IForm) => {
         setValues({ ...values, name, email })
         setUserDataChanged(false)
     }
     useEffect(() => {
-        dispatch<any>(getUser())
+        dispatch(getUser())
         init({ name, email })
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -38,7 +37,7 @@ export function ProfilePage() {
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault()
-        dispatch<any>(setUserData(values))
+        dispatch(setUserData(values))
     }
 
     const onCancel = () => {
