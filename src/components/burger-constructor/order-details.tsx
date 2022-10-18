@@ -23,7 +23,7 @@ export default function OrderDetails() {
     useEffect(() => {
         if (isLoggedOn) {
             const order_ids: Array<string> = bun
-                ? [bun._id, ...burgerIngredients.map((item: TIngredient) => item._id), bun._id]
+                ? [bun._id, ...burgerIngredients.map((item) => item._id), bun._id]
                 : []
             if (order_ids.length > 2) {
                 dispatch(getOrderNumber(order_ids))

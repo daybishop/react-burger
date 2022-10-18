@@ -19,7 +19,7 @@ const Ingredients: FC<IIngredients> = ({ items }) => {
     const ingredients = useAppSelector(ingredientsSelectors.items)
     const images = items.reduce<string[]>(
         (prev, item) => {
-            const ingredient = ingredients.find((ingredient: TIngredient) => ingredient._id === item)
+            const ingredient = ingredients.find((ingredient) => ingredient._id === item)
             if (ingredient) {
                 prev.push(ingredient.image)
             }
@@ -30,7 +30,7 @@ const Ingredients: FC<IIngredients> = ({ items }) => {
     return (
         <div className={styles.ingredients}>
             {
-                images.map((image: string, index: number, array: string[]) => {
+                images.map((image, index, array) => {
                     const overload_counter = array.length - MAX_INGREDIENTS
                     return index < MAX_INGREDIENTS
                         ? <div key={index} style={{ zIndex: 100 - index }} >
@@ -60,7 +60,7 @@ export const Order: FC<IOrder> = ({ order }) => {
     const ingredients = useAppSelector(ingredientsSelectors.items)
     const total_price = order.ingredients.reduce<number>(
         (prev, item) => {
-            const ingredient = ingredients.find((ingredient: TIngredient) => ingredient._id === item)
+            const ingredient = ingredients.find((ingredient) => ingredient._id === item)
             if (ingredient) {
                 prev += ingredient.price
             }

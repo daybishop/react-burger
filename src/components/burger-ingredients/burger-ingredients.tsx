@@ -65,7 +65,7 @@ const Ingredient: FC<IIngredient> = ({ item }) => {
             ? item._id === bun?._id
                 ? 2
                 : 0
-            : burgerIngredients.reduce((prev: number, burgerItem: TIngredient) => {
+            : burgerIngredients.reduce((prev, burgerItem) => {
                 return prev + (item._id === burgerItem._id ? 1 : 0)
             }, 0)
 

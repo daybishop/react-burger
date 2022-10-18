@@ -39,8 +39,8 @@ interface IFeedTotal {
 }
 
 export const FeedTotal: FC<IFeedTotal> = ({ orders, total, totalToday }) => {
-    const done = orders.filter((order: TFeedOrder) => order.status === 'done').map((order: TFeedOrder) => order.number).slice(0, 36)
-    const pending = orders.filter((order: TFeedOrder) => order.status === 'pending').map((order: TFeedOrder) => order.number)
+    const done = orders.filter((order) => order.status === 'done').map((order) => order.number).slice(0, 36)
+    const pending = orders.filter((order) => order.status === 'pending').map((order) => order.number)
     return (
         <section className={styles.section}>
             <div className={styles.status_wrapper}>

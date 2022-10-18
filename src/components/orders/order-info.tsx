@@ -32,10 +32,10 @@ interface IOrderInfo {
 export const OrderInfo: FC = () => {
 
     const ingredients = useAppSelector(ingredientsSelectors.items)
-    const orders = Array.prototype.concat(useAppSelector(feedSelectors.orders), useAppSelector(ordersSelectors.orders))
+    const orders: TFeedOrder[] = Array.prototype.concat(useAppSelector(feedSelectors.orders), useAppSelector(ordersSelectors.orders))
     const { id } = useParams<IOrderInfo>()
 
-    const order: TFeedOrder = orders.find((order: TFeedOrder) => order._id === id)
+    const order = orders.find((order) => order._id === id)
 
     if (!order) return null
 
@@ -49,7 +49,7 @@ export const OrderInfo: FC = () => {
     const prices: number[] = [];
     const orderIngredients = order.ingredients.reduce<Array<TIngredient>>(
         (prev, item) => {
-            const ingredient = ingredients.find((ingredient: TIngredient) => ingredient._id === item)
+            const ingredient = ingredients.find((ingredient) => ingredient._id === item)
             if (ingredient) {
                 prices.push(ingredient.price)
                 if (counts[ingredient._id]) {
@@ -62,7 +62,7 @@ export const OrderInfo: FC = () => {
             return prev
         }, [])
 
-    const totalPrice = prices.reduce<number>((prev, item) => prev + item, 0)
+    const totalPrice = prices.reduce((prev, item) => prev + item, 0)
 
     return (
         <div className={styles.wrapper}>
@@ -71,7 +71,7 @@ export const OrderInfo: FC = () => {
             <p className={`text text_type_main-small mt-3 ${styles.status}`}>{status}</p>
             <p className={`text text_type_main-medium mt-15`}>Состав:</p>
             <div className={styles.ingredients}>
-                {orderIngredients.map((ingredient: TIngredient) => <Ingredient key={ingredient._id} item={ingredient} count={counts[ingredient._id]} />)}
+                {orderIngredients.map((ingredient) => <Ingredient key={ingredient._id} item={ingredient} count={counts[ingredient._id]} />)}
             </div>
             <div className={styles.footer}>
                 <span className={styles.time}>{order.createdAt}</span>

@@ -205,7 +205,7 @@ export default function BurgerConstructor() {
                 </div>
             }
             <div className={styles.elements}>
-                {burgerIngredients.map((item: TIngredientWithUUID, index: number) =>
+                {burgerIngredients.map((item, index) =>
                     <BurgerElement
                         ingredient={item}
                         index={index}

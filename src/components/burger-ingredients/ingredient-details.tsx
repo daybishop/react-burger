@@ -35,7 +35,7 @@ export default function IngredientDetails() {
 
     const items = useAppSelector(ingredientsSelectors.items)
     const { id } = useParams<IIngredientDetailsParams>()
-    const item = items.find((item: TIngredient) => item._id === id)
+    const item = items.find((item) => item._id === id)
 
     const gbu: Array<GBUTypes> = [
         "calories",
