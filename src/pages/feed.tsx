@@ -1,13 +1,23 @@
 import { Orders } from "../components/orders/orders"
 import { FeedTotal } from "../components/feed/feed-total"
 import { feedSelectors } from "../services/selectors/feed";
-import { useAppSelector } from "../utils/hooks";
+import { useAppDispatch, useAppSelector } from "../utils/hooks";
+import { useEffect } from 'react';
+import { connectionClose, connectionStart } from "../services/slices/feed";
 
 export const FeedPage = () => {
 
     const orders = useAppSelector(feedSelectors.orders)
     const total = useAppSelector(feedSelectors.total)
     const totalToday = useAppSelector(feedSelectors.totalToday)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(connectionStart(''))
+        return () => {
+            dispatch(connectionClose(''))
+        }
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <>

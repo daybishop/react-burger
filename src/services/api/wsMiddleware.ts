@@ -23,8 +23,12 @@ export const socketMiddleware = (wsUrl: string, actions: TActions, useToken?: bo
 
             if (socket) {
 
+                if (action.type === actions.connectionClose.type) {
+                    socket.close()
+                }
+
                 socket.onopen = event => {
-                    dispatch(actions.connectionSuccess)
+                    dispatch(actions.connectionSuccess(''))
                 }
 
                 socket.onerror = event => {
@@ -37,7 +41,7 @@ export const socketMiddleware = (wsUrl: string, actions: TActions, useToken?: bo
                 }
 
                 socket.onclose = event => {
-                    dispatch(actions.connectionClosed)
+                    dispatch(actions.connectionClosed(''))
                 }
             }
 

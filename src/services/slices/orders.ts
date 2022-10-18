@@ -48,7 +48,8 @@ export const ordersSlice = createSlice<IOrdersState, SliceCaseReducers<IOrdersSt
                 state.total = 0
                 state.totalToday = 0
             }
-        }
+        },
+        connectionClose: state => { },
     },
 })
 
@@ -57,7 +58,8 @@ export const {
     connectionSuccess,
     connectionError,
     connectionClosed,
-    getMessage
+    getMessage,
+    connectionClose
 } = ordersSlice.actions
 
 export const actions = ordersSlice.actions

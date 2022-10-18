@@ -48,7 +48,8 @@ export const feedSlice = createSlice<IOrdersState, SliceCaseReducers<IOrdersStat
                 state.total = 0
                 state.totalToday = 0
             }
-        }
+        },
+        connectionClose: state => { },
     },
 })
 
@@ -57,7 +58,8 @@ export const {
     connectionSuccess,
     connectionError,
     connectionClosed,
-    getMessage
+    getMessage,
+    connectionClose
 } = feedSlice.actions
 
 export const actions = feedSlice.actions

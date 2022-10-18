@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { IForm } from '../../utils/types';
 import { Orders } from '../../components/orders/orders';
 import { ordersSelectors } from '../../services/selectors/orders';
+import { connectionClose, connectionStart } from '../../services/slices/orders';
 
 export function ProfilePage() {
 
@@ -29,6 +30,10 @@ export function ProfilePage() {
     useEffect(() => {
         dispatch(getUser())
         init({ name, email })
+        dispatch(connectionStart(''))
+        return () => {
+            dispatch(connectionClose(''))
+        }
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
