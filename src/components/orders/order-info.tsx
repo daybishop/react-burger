@@ -71,7 +71,7 @@ export const OrderInfo: FC = () => {
             <p className={`text text_type_main-small mt-3 ${styles.status}`}>{status}</p>
             <p className={`text text_type_main-medium mt-15`}>Состав:</p>
             <div className={styles.ingredients}>
-                {orderIngredients.map((ingredient: TIngredient) => <Ingredient item={ingredient} count={counts[ingredient._id]} />)}
+                {orderIngredients.map((ingredient: TIngredient) => <Ingredient key={ingredient._id} item={ingredient} count={counts[ingredient._id]} />)}
             </div>
             <div className={styles.footer}>
                 <span className={styles.time}>{order.createdAt}</span>
