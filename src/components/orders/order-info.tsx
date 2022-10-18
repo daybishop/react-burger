@@ -11,15 +11,16 @@ import { ordersSelectors } from "../../services/selectors/orders"
 
 interface IIngredient {
     item: TIngredient
+    count?: number
 }
 
-const Ingredient: FC<IIngredient> = ({ item }) => {
+const Ingredient: FC<IIngredient> = ({ item, count }) => {
     const { image, name, price } = item
     return (
         <div className={styles.ingredient}>
             <IngredientCircle image={image} />
             <span className={styles.ingredient_name}>{name}</span>
-            <Price price={price} />
+            <Price price={price} count={count} />
         </div>
     )
 }
@@ -44,16 +45,24 @@ export const OrderInfo: FC = () => {
         pending: 'Завершен',
     }[order.status]
 
-    const orderIngredients = order.ingredients.reduce<TIngredient[]>(
+    const counts: { [k: string]: number } = {};
+    const prices: number[] = [];
+    const orderIngredients = order.ingredients.reduce<Array<TIngredient>>(
         (prev, item) => {
             const ingredient = ingredients.find((ingredient: TIngredient) => ingredient._id === item)
             if (ingredient) {
-                prev.push(ingredient)
+                prices.push(ingredient.price)
+                if (counts[ingredient._id]) {
+                    counts[ingredient._id]++
+                } else {
+                    counts[ingredient._id] = 1
+                    prev.push(ingredient)
+                }
             }
             return prev
         }, [])
 
-    const totalPrice = orderIngredients.reduce<number>((prev, item) => prev + item.price, 0)
+    const totalPrice = prices.reduce<number>((prev, item) => prev + item, 0)
 
     return (
         <div className={styles.wrapper}>
@@ -62,7 +71,7 @@ export const OrderInfo: FC = () => {
             <p className={`text text_type_main-small mt-3 ${styles.status}`}>{status}</p>
             <p className={`text text_type_main-medium mt-15`}>Состав:</p>
             <div className={styles.ingredients}>
-                {orderIngredients.map((ingredient: TIngredient) => <Ingredient item={ingredient} />)}
+                {orderIngredients.map((ingredient: TIngredient) => <Ingredient item={ingredient} count={counts[ingredient._id]} />)}
             </div>
             <div className={styles.footer}>
                 <span className={styles.time}>{order.createdAt}</span>
