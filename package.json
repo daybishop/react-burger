@@ -19,6 +19,7 @@
     "css-loader": "^6.7.1",
     "css-modules": "^0.3.0",
     "eslint-config-react-app": "^7.0.1",
+    "moment": "^2.29.4",
     "react": "^16.8.6",
     "react-dnd": "^15.1.2",
     "react-dnd-html5-backend": "^15.1.3",

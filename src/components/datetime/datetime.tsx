@@ -1,4 +1,6 @@
 import { FC } from "react"
+import moment from 'moment'
+import 'moment/locale/ru';
 
 interface IDateTime {
     time: string
@@ -7,7 +9,7 @@ interface IDateTime {
 export const DateTime: FC<IDateTime> = ({ time }) => {
     return (
         <>
-            {time}
+            {moment(time).from(moment())}
         </>
     )
 }
