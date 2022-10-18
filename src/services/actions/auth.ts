@@ -1,9 +1,9 @@
-import { Dispatch } from "redux"
+import { TAppDispatch } from "../../store"
 import { IForm } from "../../utils/types"
 import { forgotPasswordRequest, getUserRequest, loginRequest, logoutRequest, registerRequest, resetPasswordRequest, setUserRequest } from "../api/auth"
 import { setIsPasswordReset, setUser } from "../slices/user"
 
-export const loginUser = (form: IForm) => (dispatch: Dispatch) => {
+export const loginUser = (form: IForm) => (dispatch: TAppDispatch) => {
     loginRequest(form)
         .then(data => {
             dispatch(setUser(data.user))
@@ -14,7 +14,7 @@ export const loginUser = (form: IForm) => (dispatch: Dispatch) => {
         })
 }
 
-export const logoutUser = () => (dispatch: Dispatch) => {
+export const logoutUser = () => (dispatch: TAppDispatch) => {
     logoutRequest()
         .then(data => {
             if (data.success) {
@@ -24,7 +24,7 @@ export const logoutUser = () => (dispatch: Dispatch) => {
         .catch(reason => console.log(reason))
 }
 
-export const register = (form: IForm) => (dispatch: Dispatch) => {
+export const register = (form: IForm) => (dispatch: TAppDispatch) => {
     registerRequest(form)
         .then(data => {
             dispatch(setUser(data.user))
@@ -32,7 +32,7 @@ export const register = (form: IForm) => (dispatch: Dispatch) => {
         .catch(reason => console.log(reason))
 }
 
-export const forgotPassword = (form: IForm) => (dispatch: Dispatch) => {
+export const forgotPassword = (form: IForm) => (dispatch: TAppDispatch) => {
     forgotPasswordRequest(form)
         .then(data => {
             dispatch(setIsPasswordReset(true))
@@ -40,7 +40,7 @@ export const forgotPassword = (form: IForm) => (dispatch: Dispatch) => {
         .catch(reason => console.log(reason))
 }
 
-export const resetPassword = (form: IForm) => (dispatch: Dispatch) => {
+export const resetPassword = (form: IForm) => (dispatch: TAppDispatch) => {
     resetPasswordRequest(form)
         .then(data => {
             dispatch(setIsPasswordReset(false))
@@ -48,7 +48,7 @@ export const resetPassword = (form: IForm) => (dispatch: Dispatch) => {
         .catch(reason => console.log(reason))
 }
 
-export const getUser = () => (dispatch: Dispatch) => {
+export const getUser = () => (dispatch: TAppDispatch) => {
     getUserRequest()
         .then(data => {
             dispatch(setUser(data.user))
@@ -59,7 +59,7 @@ export const getUser = () => (dispatch: Dispatch) => {
         })
 }
 
-export const setUserData = (form: IForm) => (dispatch: Dispatch) => {
+export const setUserData = (form: IForm) => (dispatch: TAppDispatch) => {
     setUserRequest(form)
         .then(data => {
             dispatch(setUser(data.user))
