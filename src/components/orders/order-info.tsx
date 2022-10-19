@@ -74,7 +74,7 @@ export const OrderInfo: FC = () => {
                 {orderIngredients.map((ingredient) => <Ingredient key={ingredient._id} item={ingredient} count={counts[ingredient._id]} />)}
             </div>
             <div className={styles.footer}>
-                <span className={styles.time}>{order.createdAt}</span>
+                <span className={styles.time}><DateTime time={order.updatedAt} /></span>
                 <Price price={totalPrice} />
             </div>
         </div>
