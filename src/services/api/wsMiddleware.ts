@@ -1,17 +1,16 @@
-import { ActionCreatorWithoutPayload, ActionCreatorWithPayload, CaseReducerActions, SliceCaseReducers } from '@reduxjs/toolkit';
+import { CaseReducerActions, SliceCaseReducers } from '@reduxjs/toolkit';
 import type { Middleware, MiddlewareAPI } from 'redux';
 import { TAppDispatch, TRootState } from '../../store';
 import { IOrdersState } from '../slices/orders';
 import { getAccessToken } from './auth';
 
-type AppAction = ActionCreatorWithPayload<any, string> | ActionCreatorWithoutPayload<string>
 type TActions = CaseReducerActions<SliceCaseReducers<IOrdersState>>
 
 export const socketMiddleware = (wsUrl: string, actions: TActions, useToken?: boolean): Middleware => {
     return ((store: MiddlewareAPI<TAppDispatch, TRootState>) => {
         let socket: WebSocket | null = null;
 
-        return next => (action: AppAction) => {
+        return next => (action) => {
 
             const { dispatch } = store;
 
