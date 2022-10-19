@@ -7,7 +7,13 @@ import { IngredientCircle } from "../ingredients/ingredient-circle"
 import { useParams } from "react-router-dom"
 import { feedSelectors } from "../../services/selectors/feed"
 import { ordersSelectors } from "../../services/selectors/orders"
-import { useAppSelector } from "../../utils/hooks"
+import { useAppDispatch, useAppSelector } from "../../utils/hooks"
+import { DateTime } from "../datetime/datetime"
+import { useEffect } from 'react';
+import { connectionClose as feedClose, connectionStart as feedStart } from "../../services/slices/feed";
+import { connectionClose as ordersClose, connectionStart as ordersStart } from "../../services/slices/orders";
+
+
 
 interface IIngredient {
     item: TIngredient
@@ -34,6 +40,16 @@ export const OrderInfo: FC = () => {
     const ingredients = useAppSelector(ingredientsSelectors.items)
     const orders: TFeedOrder[] = Array.prototype.concat(useAppSelector(feedSelectors.orders), useAppSelector(ordersSelectors.orders))
     const { id } = useParams<IOrderInfo>()
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(feedStart(''))
+        dispatch(ordersStart(''))
+        return () => {
+            dispatch(feedClose(''))
+            dispatch(ordersClose(''))
+        }
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const order = orders.find((order) => order._id === id)
 
