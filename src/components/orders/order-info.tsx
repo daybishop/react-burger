@@ -4,7 +4,7 @@ import { TFeedOrder, TIngredient } from "../../utils/types"
 import styles from "./order-info.module.css"
 import { Price } from "../ingredients/price"
 import { IngredientCircle } from "../ingredients/ingredient-circle"
-import { useParams } from "react-router-dom"
+import { useParams, useRouteMatch } from "react-router-dom"
 import { feedSelectors } from "../../services/selectors/feed"
 import { ordersSelectors } from "../../services/selectors/orders"
 import { useAppDispatch, useAppSelector } from "../../utils/hooks"
@@ -42,12 +42,15 @@ export const OrderInfo: FC = () => {
     const { id } = useParams<IOrderInfo>()
     const dispatch = useAppDispatch()
 
+    const isFeed = useRouteMatch({ path: '/feed/:id', exact: true })
+    const isOrders = useRouteMatch({ path: '/profile/orders/:id', exact: true })
+
     useEffect(() => {
-        dispatch(feedStart(''))
-        dispatch(ordersStart(''))
+        isFeed && dispatch(feedStart(''))
+        isOrders && dispatch(ordersStart(''))
         return () => {
-            dispatch(feedClose(''))
-            dispatch(ordersClose(''))
+            isFeed && dispatch(feedClose(''))
+            isOrders && dispatch(ordersClose(''))
         }
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
