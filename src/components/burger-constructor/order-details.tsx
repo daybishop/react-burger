@@ -1,6 +1,5 @@
 import styles from './order-details.module.css';
 import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch, useSelector } from 'react-redux';
 import { userSelectors } from '../../services/selectors/user';
 import { useEffect } from 'react'
 import { getOrderNumber } from '../../services/actions/orders';
@@ -8,33 +7,33 @@ import Modal from '../common/modal';
 import { clearOrderData, hideOrder } from '../../services/slices/constructor';
 import { constructorSelectors } from '../../services/selectors/constructor';
 import { TIngredient } from '../../utils/types';
-import { AnyAction } from 'redux';
+import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 
 export default function OrderDetails() {
 
-    const isLoggedOn = useSelector(userSelectors.isLoggedOn)
-    const bun = useSelector(constructorSelectors.bun)
-    const burgerIngredients = useSelector(constructorSelectors.items)
-    const orderNumber = useSelector(constructorSelectors.orderNumber)
-    const showOrderModal = useSelector(constructorSelectors.showOrderModal)
-    const isOrderRequested = useSelector(constructorSelectors.isOrderRequested)
+    const isLoggedOn = useAppSelector(userSelectors.isLoggedOn)
+    const bun = useAppSelector(constructorSelectors.bun)
+    const burgerIngredients = useAppSelector(constructorSelectors.items)
+    const orderNumber = useAppSelector(constructorSelectors.orderNumber)
+    const showOrderModal = useAppSelector(constructorSelectors.showOrderModal)
+    const isOrderRequested = useAppSelector(constructorSelectors.isOrderRequested)
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         if (isLoggedOn) {
             const order_ids: Array<string> = bun
-                ? [bun._id, ...burgerIngredients.map((item: TIngredient) => item._id), bun._id]
+                ? [bun._id, ...burgerIngredients.map((item) => item._id), bun._id]
                 : []
             if (order_ids.length > 2) {
-                dispatch<any>(getOrderNumber(order_ids))
+                dispatch(getOrderNumber(order_ids))
             }
         }
     }, [isLoggedOn, showOrderModal])
 
     const handleClose = () => {
-        dispatch(hideOrder())
-        dispatch(clearOrderData())
+        dispatch(hideOrder(''))
+        dispatch(clearOrderData(''))
     }
 
     return (

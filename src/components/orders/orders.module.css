@@ -1,0 +1,27 @@
+.section {
+    width: 600px;
+    max-height: 100%;
+}
+
+.orders {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+    overflow-y: auto;
+    max-height: 700px;
+    padding-right: 24px;
+
+}
+
+.orders::-webkit-scrollbar {
+    width: 10px;
+}
+
+.orders::-webkit-scrollbar-track {
+    background-color: #1C1C21;
+}
+
+.orders::-webkit-scrollbar-thumb {
+    background-color: #8585AD;
+}

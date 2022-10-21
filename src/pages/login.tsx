@@ -1,16 +1,15 @@
 import styles from './register.module.css';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { loginUser } from '../services/actions/auth';
-import { useFormValues } from '../utils/hooks';
+import { useAppDispatch, useFormValues } from '../utils/hooks';
 import { setIsPasswordReset } from '../services/slices/user';
 import { FormEvent, useEffect } from 'react'
 
 export function LoginPage() {
 
     const { values, handleChange } = useFormValues({ email: '', password: '' })
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         dispatch(setIsPasswordReset(false))
@@ -18,7 +17,7 @@ export function LoginPage() {
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault()
-        dispatch<any>(loginUser(values))
+        dispatch(loginUser(values))
     }
 
     return (

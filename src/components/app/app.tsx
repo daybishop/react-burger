@@ -1,18 +1,18 @@
 import './app.module.css';
 import AppHeader from '../app-header/app-header';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../services/actions/ingredients';
 import { BrowserRouter } from 'react-router-dom';
 import { ModalSwitch } from '../common/modal-switch';
+import { useAppDispatch } from '../../utils/hooks';
 
 const App = () => {
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch<any>(fetchIngredients())
-  }, [])
+    dispatch(fetchIngredients())
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <BrowserRouter>

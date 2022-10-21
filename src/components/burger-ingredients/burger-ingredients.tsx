@@ -4,13 +4,13 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import { TIngredient } from '../../utils/types'
-import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentTab } from '../../services/slices/ingredients';
 import { useDrag } from 'react-dnd';
 import { addItem, addBun } from '../../services/slices/constructor';
 import { Link, useLocation } from 'react-router-dom';
 import { constructorSelectors } from '../../services/selectors/constructor';
 import { ingredientsSelectors } from '../../services/selectors/ingredients';
+import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 
 type TTabClickHandle = (e: string) => void
 interface ITabs {
@@ -26,8 +26,8 @@ const tabNames: { [key in TSections]: string } = {
 
 const Tabs: FC<ITabs> = ({ handleTabClick, refProp }) => {
 
-    const currentTab = useSelector(ingredientsSelectors.currentTab)
-    const dispatch = useDispatch()
+    const currentTab = useAppSelector(ingredientsSelectors.currentTab)
+    const dispatch = useAppDispatch()
 
     const onClick = (e: string) => {
         dispatch(setCurrentTab(e))
@@ -57,15 +57,15 @@ const Ingredient: FC<IIngredient> = ({ item }) => {
 
     let location = useLocation()
     const id = item['_id']
-    const dispatch = useDispatch()
-    const burgerIngredients = useSelector(constructorSelectors.items)
-    const bun = useSelector(constructorSelectors.bun)
+    const dispatch = useAppDispatch()
+    const burgerIngredients = useAppSelector(constructorSelectors.items)
+    const bun = useAppSelector(constructorSelectors.bun)
     const count: number =
         item.type === 'bun'
             ? item._id === bun?._id
                 ? 2
                 : 0
-            : burgerIngredients.reduce((prev: number, burgerItem: TIngredient) => {
+            : burgerIngredients.reduce((prev, burgerItem) => {
                 return prev + (item._id === burgerItem._id ? 1 : 0)
             }, 0)
 
@@ -114,7 +114,7 @@ interface IIngredientSection {
 
 const IngredientsSection: FC<IIngredientSection> = ({ type, refProp }) => {
 
-    const ingredientsData: Array<TIngredient> = useSelector(ingredientsSelectors.items)
+    const ingredientsData: Array<TIngredient> = useAppSelector(ingredientsSelectors.items)
 
     const ingredients = ingredientsData.filter(item => {
         return item['type'] === type;
@@ -143,9 +143,9 @@ const IngredientsSection: FC<IIngredientSection> = ({ type, refProp }) => {
 
 export default function BurgerIngredients() {
 
-    const currentTab = useSelector(ingredientsSelectors.currentTab)
+    const currentTab = useAppSelector(ingredientsSelectors.currentTab)
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const onTabClick: TTabClickHandle = (e) => {
         document.getElementById(`ingredient_section_${e}`)?.scrollIntoView({ block: "start", behavior: "smooth" })
@@ -183,9 +183,6 @@ export default function BurgerIngredients() {
 
     return (
         <section className={styles.section}>
-            <p className="text text_type_main-large pt-10 pb-5">
-                Соберите бургер
-            </p>
             <Tabs handleTabClick={onTabClick} refProp={refTabs} />
             <div className={styles.scroll_box} onScroll={handleScroll}>
                 {

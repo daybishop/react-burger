@@ -1,5 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, SliceCaseReducers } from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid';
+import { TIngredient } from '../../utils/types';
+
+type TIngredientWithUUID = TIngredient & {
+    uuid: string
+}
+
+export interface IConstructorState {
+    items: TIngredientWithUUID[]
+    backupItems: TIngredientWithUUID[]
+    bun: TIngredientWithUUID | null
+    totalPrice: number
+    orderNumber: string | null
+    showOrderModal: boolean
+    isOrderRequested: boolean
+}
 
 export const initialState = {
     items: [],
@@ -11,9 +26,9 @@ export const initialState = {
     isOrderRequested: false,
 }
 
-const calculateTotalPrice = state => (state.bun ? 2 * state.bun.price : 0) + state.items.reduce((prev, item) => prev + item.price, 0)
+const calculateTotalPrice = (state: IConstructorState) => (state.bun ? 2 * state.bun.price : 0) + state.items.reduce((prev, item) => prev + item.price, 0)
 
-export const constructorSlice = createSlice({
+export const constructorSlice = createSlice<IConstructorState, SliceCaseReducers<IConstructorState>, string>({
     name: 'constructor',
     initialState,
     reducers: {
@@ -47,7 +62,7 @@ export const constructorSlice = createSlice({
             const dragItem = state.items[dragIndex];
             const items = state.items;
             const hoverItem = items.splice(hoverIndex, 1, dragItem).pop()
-            items.splice(dragIndex, 1, hoverItem)
+            if (hoverItem) items.splice(dragIndex, 1, hoverItem)
             state.items = items
         },
         backup: (state) => {

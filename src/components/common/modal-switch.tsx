@@ -1,17 +1,18 @@
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useDispatch } from "react-redux";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { NotFoundPage } from "../../pages/404";
+import { FeedPage } from "../../pages/feed";
+import { FeedOrderInfoPage } from "../../pages/feed-order-info";
 import { ForgotPasswordPage } from "../../pages/forgot-password";
 import { LoginPage } from "../../pages/login";
 import { LogoutPage } from "../../pages/logout";
+import { MainPage } from "../../pages/main";
 import { ProfilePage } from "../../pages/profile/profile";
 import { RegisterPage } from "../../pages/register";
 import { ResetPasswordPage } from "../../pages/reset-password";
 import { clearSelectedItem } from "../../services/slices/ingredients";
-import BurgerConstructor from "../burger-constructor/burger-constructor";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
+import { useAppDispatch } from "../../utils/hooks";
 import IngredientDetails from "../burger-ingredients/ingredient-details";
 import { AnonymousRoute } from "../route/anonymous-route";
 import { ProtectedRoute } from "../route/protected-route";
@@ -28,27 +29,32 @@ export const ModalSwitch = () => {
 
     const background = location && location.state && location.state.background;
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const hideModal = () => {
-        dispatch(clearSelectedItem())
+        dispatch(clearSelectedItem(''))
+        history.goBack()
+    }
+    const hideOrderModal = () => {
         history.goBack()
     }
 
     return (
         <>
             <Switch location={background || location}>
-                <Route path='/' exact >
+                <Route path="/" exact >
                     <DndProvider backend={HTML5Backend}>
-                        <BurgerIngredients />
-                        <BurgerConstructor />
+                        <MainPage />
                     </DndProvider>
                 </Route>
-                <Route path='/logout' component={LogoutPage} />
-                <AnonymousRoute path='/login' component={LoginPage} />
-                <AnonymousRoute path='/register' component={RegisterPage} />
-                <AnonymousRoute path='/reset-password' component={ResetPasswordPage} />
-                <AnonymousRoute path='/forgot-password' component={ForgotPasswordPage} />
-                <ProtectedRoute path='/profile' component={ProfilePage} />
+                <Route path="/feed/:id" exact={true} component={FeedOrderInfoPage} />
+                <Route path="/feed" exact={true} component={FeedPage} />
+                <Route path="/logout" component={LogoutPage} />
+                <AnonymousRoute path="/login" component={LoginPage} />
+                <AnonymousRoute path="/register" component={RegisterPage} />
+                <AnonymousRoute path="/reset-password" component={ResetPasswordPage} />
+                <AnonymousRoute path="/forgot-password" component={ForgotPasswordPage} />
+                <ProtectedRoute path="/profile/orders/:id" component={FeedOrderInfoPage} />
+                <ProtectedRoute path="/profile" component={ProfilePage} />
                 <Route path="/ingredients/:id" component={IngredientDetails} />
                 <Route component={NotFoundPage} />
             </Switch>
@@ -56,6 +62,20 @@ export const ModalSwitch = () => {
                 <Route path="/ingredients/:id" children={
                     <Modal show={true} header="Детали ингредиента" handleClose={hideModal}>
                         <IngredientDetails />
+                    </Modal>
+                } />
+            }
+            {background &&
+                <Route path="/feed/:id" children={
+                    <Modal show={true} header="Детали заказа" handleClose={hideOrderModal}>
+                        <FeedOrderInfoPage />
+                    </Modal>
+                } />
+            }
+            {background &&
+                <Route path="/profile/orders/:id" children={
+                    <Modal show={true} header="Детали заказа" handleClose={hideOrderModal}>
+                        <FeedOrderInfoPage />
                     </Modal>
                 } />
             }

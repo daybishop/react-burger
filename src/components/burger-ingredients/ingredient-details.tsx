@@ -1,6 +1,6 @@
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { ingredientsSelectors } from '../../services/selectors/ingredients';
+import { useAppSelector } from '../../utils/hooks';
 import { TIngredient } from '../../utils/types'
 import styles from './ingredient-details.module.css';
 
@@ -33,9 +33,9 @@ interface IIngredientDetailsParams {
 
 export default function IngredientDetails() {
 
-    const items = useSelector(ingredientsSelectors.items)
+    const items = useAppSelector(ingredientsSelectors.items)
     const { id } = useParams<IIngredientDetailsParams>()
-    const item = items.find((item: TIngredient) => item._id === id)
+    const item = items.find((item) => item._id === id)
 
     const gbu: Array<GBUTypes> = [
         "calories",

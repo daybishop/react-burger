@@ -26,7 +26,7 @@ const HeaderLink: FC<IHeaderLink> = ({ children, title, to }) => {
 export default function AppHeader() {
 
     const burgerIconType = useRouteMatch({ path: '/', exact: true }) ? 'primary' : 'secondary'
-    const listIconType = useRouteMatch({ path: '/profile/orders', exact: true }) ? 'primary' : 'secondary'
+    const listIconType = useRouteMatch({ path: '/feed', exact: true }) ? 'primary' : 'secondary'
     const profileIconType = useRouteMatch({ path: '/profile', exact: true }) ? 'primary' : 'secondary'
 
     return (
@@ -36,7 +36,7 @@ export default function AppHeader() {
                     <HeaderLink title="Конструктор" to='/'>
                         {<BurgerIcon type={burgerIconType} />}
                     </HeaderLink>
-                    <HeaderLink title="Лента заказов" to='/profile/orders' >
+                    <HeaderLink title="Лента заказов" to='/feed' >
                         {<ListIcon type={listIconType} />}
                     </HeaderLink>
                 </div>

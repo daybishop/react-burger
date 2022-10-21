@@ -1,4 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, SliceCaseReducers } from '@reduxjs/toolkit'
+import { TIngredient } from '../../utils/types'
+
+interface IIngredientsState {
+    items: TIngredient[]
+    isLoading: boolean
+    error: boolean
+    selectedItem: TIngredient | null
+    currentTab: string
+}
 
 const initialState = {
     items: [],
@@ -8,7 +17,7 @@ const initialState = {
     currentTab: 'bun',
 }
 
-export const ingredientsSlice = createSlice({
+export const ingredientsSlice = createSlice<IIngredientsState, SliceCaseReducers<IIngredientsState>, string>({
     name: 'ingredients',
     initialState,
     reducers: {

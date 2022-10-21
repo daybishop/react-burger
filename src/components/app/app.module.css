@@ -15,12 +15,3 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
-main {
-  display: flex;
-  height: 800px;
-  width: 1240px;
-  margin: auto;
-  gap: 40px;
-  text-align: center;
-}

@@ -1,0 +1,23 @@
+.border {
+    position: relative;
+    height: 64px;
+    width: 124px;
+    background: linear-gradient(45deg, #792828, #242c74);
+    clip-path: circle(32px at 50% 50%);
+
+}
+
+.border img {
+    margin: 2px;
+    height: 60px;
+    width: 120px;
+    clip-path: circle(30px at 50% 50%);
+    background-color: #1C1C21;
+}
+
+.border span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 20px;
+}

@@ -1,0 +1,10 @@
+.price {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.price svg {
+    margin-left: 9px;
+}
