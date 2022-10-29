@@ -194,7 +194,7 @@ export default function BurgerConstructor() {
     }))
 
     return (
-        <section className={styles.section} ref={dropRef}>
+        <section data-testid="constructor" className={styles.section} ref={dropRef}>
             {
                 bun &&
                 <div className={styles.top_and_bottom_element}>

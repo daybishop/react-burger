@@ -41,7 +41,7 @@ export default function OrderDetails() {
             ?
             <Modal show={true} handleClose={handleClose}>
                 <div className={styles.content}>
-                    <span className="text text_type_digits-large">
+                    <span data-testid="order_number" className="text text_type_digits-large">
                         {orderNumber || '---'}
                     </span>
                     <p className={`text text_type_main-medium ${styles.id_text}`}>

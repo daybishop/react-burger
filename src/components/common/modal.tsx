@@ -37,7 +37,7 @@ const Modal: FC<IModal> = ({ show, children, header, handleClose }) => {
     return createPortal(
         (
             <ModalOverlay handleClose={handleClose}>
-                <section className={styles.main} onClick={e => e.stopPropagation()}>
+                <section data-testid="modal" className={styles.main} onClick={e => e.stopPropagation()}>
                     <div className={`text text_type_main-large pt-10 pb-6 ${styles.title}`}>
                         <span>{header}</span>
                         <CloseIcon type='primary' onClick={handleClose} />
