@@ -7,7 +7,7 @@ interface IUserState {
     isPasswordReset: boolean
 }
 
-const initialState = {
+export const initialState = {
     name: '',
     email: '',
     isLoggedOn: false,
