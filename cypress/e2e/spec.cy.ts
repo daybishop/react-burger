@@ -1,7 +1,7 @@
 describe('Burger Constructor', () => {
 
   beforeEach(() => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
   })
 
   it('Click header links', () => {
@@ -11,12 +11,12 @@ describe('Burger Constructor', () => {
   })
 
   it('Click ingredients tabs', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     cy.get('[data-testid=ingredient-tabs]>div').click({ force: true, multiple: true })
   })
 
   it('Click ingredient, open and close modal', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     cy.get('[data-testid=ingredient]').first().click()
     cy.get('body').type('{esc}')
   })
@@ -30,7 +30,7 @@ describe('Burger Constructor', () => {
   }
 
   it('Drag and Drop', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     dragAndDrop(0)
     dragAndDrop(3)
     dragAndDrop(7)
@@ -38,7 +38,7 @@ describe('Burger Constructor', () => {
   })
 
   it('Make order', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     dragAndDrop(0)
     dragAndDrop(3)
     dragAndDrop(7)
