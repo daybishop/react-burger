@@ -12,8 +12,7 @@ React, React Router, Redux Toolkit, React DnD, TypeScript
 
 ## Демонстрация работы
 
-Пока не удаётся задеплоить. При выполнении билда вываливается в ошибку. Причины непонятны. 
-
+https://daybishop.github.io/react-burger/
 
 ## Локальный запуск
 
@@ -49,3 +48,8 @@ React, React Router, Redux Toolkit, React DnD, TypeScript
   npm run cypress
 ```
 
+## Разворачивание
+
+```bash
+  npm run deploy
+```
