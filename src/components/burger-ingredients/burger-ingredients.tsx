@@ -35,7 +35,7 @@ const Tabs: FC<ITabs> = ({ handleTabClick, refProp }) => {
     }
 
     return (
-        <div className={styles.tabs} ref={refProp}>
+        <div data-testid="ingredient-tabs" className={styles.tabs} ref={refProp}>
             {
                 Object.keys(tabNames).map((key) => {
                     return (
@@ -86,7 +86,7 @@ const Ingredient: FC<IIngredient> = ({ item }) => {
         []
     )
     return (
-        <li className={styles.item} ref={dragRef} style={{ opacity }}>
+        <li data-testid="ingredient" className={styles.item} ref={dragRef} style={{ opacity }}>
             <Link
                 className={styles.link}
                 key={id}

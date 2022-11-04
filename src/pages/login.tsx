@@ -24,8 +24,8 @@ export function LoginPage() {
         < div className={styles.wrapper} >
             <form className={styles.form} onSubmit={onSubmit}>
                 <h1 className={styles.heading}>Вход</h1>
-                <Input type='email' onChange={handleChange} placeholder='E-mail' name='email' value={values.email} />
-                <PasswordInput onChange={handleChange} name='password' value={values.password} />
+                <Input data-testid="username" type='email' onChange={handleChange} placeholder='E-mail' name='email' value={values.email} />
+                <PasswordInput data-testid="password" onChange={handleChange} name='password' value={values.password} />
                 <Button>Войти</Button>
                 <span>Вы - новый пользователь? <Link to='/register'>Зарегистрироваться</Link></span>
                 <span>Забыли пароль? <Link to='/forgot-password'>Восстановить пароль</Link></span>

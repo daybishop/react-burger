@@ -63,6 +63,7 @@ export const constructorSlice = createSlice<IConstructorState, SliceCaseReducers
             const items = state.items;
             const hoverItem = items.splice(hoverIndex, 1, dragItem).pop()
             if (hoverItem) items.splice(dragIndex, 1, hoverItem)
+            // console.log('items', {...items})
             state.items = items
         },
         backup: (state) => {

@@ -9,7 +9,7 @@ interface IIngredientsState {
     currentTab: string
 }
 
-const initialState = {
+export const initialState = {
     items: [],
     isLoading: false,
     error: false,
